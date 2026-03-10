@@ -1,0 +1,50 @@
+[workspace]
+members = [
+    "crates/evolutrix",
+    "crates/tzimtzum",
+    "crates/nova-morph",
+    "crates/nfc-bridge",
+    "crates/vdf",
+    "crates/antimatrix",
+    "crates/dag-ledger",
+]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/CodeNoLimits/dreamnova-v5"
+authors = ["DreamNova <admin@dreamnova.com>"]
+
+[workspace.dependencies]
+# Cryptography
+sha2 = "0.10"
+aes = "0.8"
+rand = "0.8"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Numeric
+num-bigint = "0.4"
+num-traits = "0.2"
+
+# Data structures
+petgraph = "0.7"
+
+# Arena allocation
+bumpalo = { version = "3", features = ["collections"] }
+
+# Error handling
+thiserror = "2"
+
+# Note: halo2_proofs is declared directly in crates/tzimtzum/Cargo.toml
+# behind a feature flag, not here, because workspace deps cannot be optional.
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true

@@ -1,0 +1,12 @@
+[package]
+name = "nova-morph"
+description = "Arena allocation engine — O(1) AST mutation with bumpalo"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+bumpalo = { workspace = true }
+thiserror = { workspace = true }

@@ -1,0 +1,14 @@
+[package]
+name = "dag-ledger"
+description = "DAG-UTXO ledger — Proof-of-Shareholding consensus with VDF temporal barriers"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+petgraph = { workspace = true }
+serde = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }

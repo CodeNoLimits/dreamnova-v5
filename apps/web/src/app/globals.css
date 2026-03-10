@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sacred-gold: #D4AF37;
+  --color-sacred-gold-light: #E8C960;
+  --color-sacred-gold-dark: #B8941F;
+  --color-sacred-cyan: #00D4FF;
+  --color-sacred-cyan-light: #33DDFF;
+  --color-sacred-cyan-dark: #00A8CC;
+  --color-sacred-black: #050508;
+  --color-sacred-black-light: #0A0A10;
+  --color-sacred-black-medium: #111118;
+  --color-sacred-white: #FFFFFF;
+  --color-sacred-white-dim: #E8E8F0;
+  --color-sacred-gray: #8888AA;
+}
+
+:root {
+  --sacred-gold: #D4AF37;
+  --sacred-gold-rgb: 212, 175, 55;
+  --sacred-cyan: #00D4FF;
+  --sacred-cyan-rgb: 0, 212, 255;
+  --sacred-black: #050508;
+  --sacred-black-light: #0A0A10;
+  --sacred-black-medium: #111118;
+  --sacred-white: #FFFFFF;
+  --sacred-gray: #8888AA;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--sacred-black);
+  color: var(--sacred-white);
+  font-family: var(--font-rajdhani), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Sacred selection colors */
+::selection {
+  background-color: rgba(var(--sacred-gold-rgb), 0.3);
+  color: var(--sacred-white);
+}
+
+::-moz-selection {
+  background-color: rgba(var(--sacred-gold-rgb), 0.3);
+  color: var(--sacred-white);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sacred-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--sacred-gold-rgb), 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--sacred-gold-rgb), 0.4);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid rgba(var(--sacred-gold-rgb), 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth transitions for interactive elements */
+a, button, input, textarea, select {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+/* Sacred gradient text utility */
+.sacred-gradient-text {
+  background: linear-gradient(135deg, var(--sacred-gold), var(--sacred-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glass morphism utility */
+.sacred-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Sacred glow utility */
+.sacred-glow {
+  box-shadow:
+    0 0 20px rgba(var(--sacred-gold-rgb), 0.1),
+    0 0 40px rgba(var(--sacred-gold-rgb), 0.05);
+}
+
+.sacred-glow-strong {
+  box-shadow:
+    0 0 30px rgba(var(--sacred-gold-rgb), 0.2),
+    0 0 60px rgba(var(--sacred-gold-rgb), 0.1),
+    0 0 90px rgba(var(--sacred-gold-rgb), 0.05);
+}
+
+/* Animated shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.sacred-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--sacred-gold-rgb), 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Page transition wrapper */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+/* Input styles */
+input, textarea, select {
+  background-color: var(--sacred-black-medium);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--sacred-white);
+  font-family: var(--font-rajdhani), system-ui, sans-serif;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--sacred-gray);
+  opacity: 0.6;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(var(--sacred-gold-rgb), 0.4);
+  box-shadow: 0 0 0 3px rgba(var(--sacred-gold-rgb), 0.1);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,18 @@
+[package]
+name = "tzimtzum"
+description = "zk-SNARK circuit for NFC identity verification — Plonkish arithmetization"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[features]
+default = []
+halo2 = ["dep:halo2_proofs"]
+
+[dependencies]
+sha2 = { workspace = true }
+rand = { workspace = true }
+thiserror = { workspace = true }
+halo2_proofs = { version = "0.3", optional = true }

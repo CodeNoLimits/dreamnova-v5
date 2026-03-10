@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dreamnova-esther"
+version = "0.1.0"
+description = "Esther AI — Entropy monitoring subsystem using Shannon entropy derivatives and GNNs on Apple MLX"
+readme = "esther/__init__.py"
+requires-python = ">=3.11"
+license = "LicenseRef-Proprietary"
+authors = [
+    { name = "DreamNova", email = "admin@dreamnova.com" },
+]
+keywords = ["entropy", "gnn", "anomaly-detection", "mlx", "apple-silicon"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "mlx>=0.22.0",
+    "numpy>=1.26.0,<3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8.0",
+    "mypy>=1.14",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["esther*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

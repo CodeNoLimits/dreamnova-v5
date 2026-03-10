@@ -1,26 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Github, Send } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/constants";
 
 const footerSections = [
   {
-    title: "Product",
+    title: "Platform",
     links: [
-      { label: "Nova Key", href: "/nova-key" },
-      { label: "Source Code", href: "/source-code" },
-      { label: "Pricing", href: "/checkout" },
-      { label: "Azamra OS", href: "/azamra" },
+      { label: "Evolutrix", href: "/#platform" },
+      { label: "Antimatrix", href: "/#platform" },
+      { label: "Tzimtzum", href: "/#platform" },
+      { label: "Esther AI", href: "/#platform" },
     ],
   },
   {
-    title: "Research",
+    title: "Technology",
     links: [
       { label: "Whitepaper", href: "/whitepaper" },
       { label: "Architecture", href: "/architecture" },
       { label: "Research", href: "/research" },
-      { label: "Manifesto", href: "/manifesto" },
+      { label: "Source Code", href: "/source-code" },
+    ],
+  },
+  {
+    title: "Enterprise",
+    links: [
+      { label: "Sentinel Plan", href: "/contact" },
+      { label: "Fortress Plan", href: "/contact" },
+      { label: "Hegemony Plan", href: "/contact" },
+      { label: "Shadow Mode Demo", href: "/contact" },
     ],
   },
   {
@@ -29,16 +38,7 @@ const footerSections = [
       { label: "Contact", href: "/contact" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
-      { label: "Refund", href: "/refund" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
-      { label: "GitHub", href: SITE_CONFIG.social.github },
-      { label: "Telegram", href: SITE_CONFIG.social.telegram },
-      { label: "Twitter / X", href: SITE_CONFIG.social.twitter },
-      { label: "Dashboard", href: "/overview" },
+      { label: "Careers", href: "/contact" },
     ],
   },
 ];
@@ -46,20 +46,23 @@ const footerSections = [
 export function Footer() {
   return (
     <footer className="relative border-t border-white/5 bg-sacred-black">
-      <div className="absolute inset-0 bg-gradient-to-t from-sacred-gold/[0.02] to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-sacred-gold/[0.01] to-transparent pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+          {/* Brand column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-sacred-gold" />
-              <span className="font-cinzel text-base text-sacred-white tracking-[0.15em]">
+              <div className="w-7 h-7 bg-sacred-gold/20 rounded-md flex items-center justify-center">
+                <span className="font-cinzel text-xs text-sacred-gold font-bold">DN</span>
+              </div>
+              <span className="font-cinzel text-sm text-sacred-white tracking-[0.15em]">
                 DREAM NOVA
               </span>
             </Link>
             <p className="font-rajdhani text-sm text-sacred-gray leading-relaxed max-w-xs">
-              Sacred NFC technology merging Breslov wisdom with cutting-edge AI.
-              Your key to the Nova network.
+              Autonomous cybersecurity platform. Self-evolving defense,
+              zero-knowledge verification, AI-driven threat response.
             </p>
             <div className="flex items-center gap-3 mt-4">
               <a
@@ -72,20 +75,20 @@ export function Footer() {
                 <Github className="w-4 h-4" />
               </a>
               <a
-                href={SITE_CONFIG.social.telegram}
+                href={SITE_CONFIG.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-sacred-gray hover:text-sacred-gold transition-colors"
-                aria-label="Telegram"
+                aria-label="LinkedIn"
               >
-                <Send className="w-4 h-4" />
+                <Linkedin className="w-4 h-4" />
               </a>
             </div>
           </div>
 
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="font-cinzel text-xs text-sacred-white tracking-[0.2em] uppercase mb-4">
+              <h4 className="font-rajdhani font-bold text-xs text-sacred-white tracking-wider uppercase mb-4">
                 {section.title}
               </h4>
               <ul className="space-y-2.5">
@@ -109,12 +112,11 @@ export function Footer() {
             <p className="font-rajdhani text-xs text-sacred-gray">
               &copy; {new Date().getFullYear()} DreamNova Inc. All rights reserved.
             </p>
-            <p className="font-sacred text-xs text-sacred-gold/40 italic tracking-wide">
-              Na Nach Nachma Nachman MeUman
-            </p>
-            <p className="font-mono text-[10px] text-sacred-gray/40">
-              63 = SaG | 148 = Nachman | 613 = Tikkun
-            </p>
+            <div className="flex items-center gap-6">
+              <span className="font-mono text-[10px] text-sacred-gray/40">
+                Built with Rust &bull; Powered by zk-SNARKs &bull; Verified by math
+              </span>
+            </div>
           </div>
         </div>
       </div>

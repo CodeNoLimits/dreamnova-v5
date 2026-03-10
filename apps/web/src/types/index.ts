@@ -96,29 +96,27 @@ export interface UserProfile {
   createdAt: string;
 }
 
-export interface SacredNumber {
-  value: number;
-  name: string;
-  meaning: string;
-  hebrew: string;
-}
+// Enterprise Marketing Types
 
 export interface PricingTier {
   name: string;
-  price: number;
-  currency: string;
+  price: string;
+  period: string;
   description: string;
   features: string[];
-  sacredNumber: SacredNumber;
   popular?: boolean;
+  cta: string;
+  highlight?: string;
 }
 
 export interface Pillar {
   name: string;
   icon: string;
+  subtitle: string;
   description: string;
   features: string[];
   color: string;
+  metric: { value: string; label: string };
 }
 
 export interface Phase {
@@ -128,4 +126,10 @@ export interface Phase {
   description: string;
   milestones: string[];
   status: "completed" | "active" | "upcoming";
+}
+
+export interface Metric {
+  value: string;
+  label: string;
+  sublabel?: string;
 }

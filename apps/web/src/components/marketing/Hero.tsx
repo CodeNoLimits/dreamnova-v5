@@ -1,222 +1,190 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Nfc, Shield, Zap } from "lucide-react";
+import { ArrowRight, Shield, Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { SACRED_NUMBERS } from "@/lib/constants";
+import { TERMINAL_LINES } from "@/lib/constants";
+
+const terminalColorMap: Record<string, string> = {
+  white: "text-sacred-white",
+  gold: "text-sacred-gold",
+  cyan: "text-sacred-cyan",
+  green: "text-green-400",
+  yellow: "text-yellow-400",
+  dim: "text-sacred-gray/20",
+};
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background layers */}
       <div className="absolute inset-0 bg-sacred-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.08)_0%,_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(0,212,255,0.05)_0%,_transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.06)_0%,_transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(0,212,255,0.04)_0%,_transparent_40%)]" />
 
-      {/* Animated grid pattern */}
+      {/* Subtle grid */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(212,175,55,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.3) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
+            "linear-gradient(rgba(212,175,55,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.4) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
         }}
       />
 
       {/* Floating orbs */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-sacred-gold/5 blur-[120px]"
-        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" as const }}
+        className="absolute top-1/4 left-[15%] w-[500px] h-[500px] rounded-full bg-sacred-gold/[0.03] blur-[150px]"
+        animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" as const }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-sacred-cyan/5 blur-[100px]"
-        animate={{ x: [0, -25, 0], y: [0, 25, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" as const }}
+        className="absolute bottom-1/4 right-[15%] w-[400px] h-[400px] rounded-full bg-sacred-cyan/[0.03] blur-[120px]"
+        animate={{ x: [0, -30, 0], y: [0, 30, 0] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" as const }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          {/* Left content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          {/* Left — Content */}
           <div className="flex-1 text-center lg:text-left">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" as const }}
+              transition={{ duration: 0.6, ease: "easeOut" as const }}
             >
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sacred-gold/20 bg-sacred-gold/5 mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-sacred-gold animate-pulse" />
-                <span className="font-mono text-xs text-sacred-gold tracking-wider">
-                  V5.0 — GENESIS PHASE
+                <span className="font-mono text-xs text-sacred-gold tracking-wider uppercase">
+                  Autonomous Defense Platform
                 </span>
               </div>
             </motion.div>
 
             <motion.h1
-              className="font-cinzel text-4xl sm:text-5xl lg:text-7xl text-sacred-white leading-[1.1] tracking-wide"
-              initial={{ opacity: 0, y: 30 }}
+              className="font-rajdhani font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-sacred-white leading-[1.05] tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" as const }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" as const }}
             >
-              DREAM{" "}
+              Cybersecurity That{" "}
               <span className="bg-gradient-to-r from-sacred-gold via-sacred-cyan to-sacred-gold bg-clip-text text-transparent bg-[length:200%_100%] animate-gold-shimmer">
-                NOVA
-              </span>
+                Evolves Faster
+              </span>{" "}
+              Than The Threat
             </motion.h1>
 
             <motion.p
-              className="mt-6 font-rajdhani text-xl sm:text-2xl text-sacred-gray leading-relaxed max-w-xl mx-auto lg:mx-0"
-              initial={{ opacity: 0, y: 20 }}
+              className="mt-6 font-rajdhani text-lg sm:text-xl text-sacred-gray leading-relaxed max-w-xl mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" as const }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" as const }}
             >
-              Stop Calculating. Start Living.
-            </motion.p>
-
-            <motion.p
-              className="mt-4 font-rajdhani text-base text-sacred-gray/70 max-w-lg mx-auto lg:mx-0"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" as const }}
-            >
-              Sacred NFC technology merging Breslov wisdom with cutting-edge AI.
-              One tap unlocks your portal to ancient knowledge, modern infrastructure,
-              and a global network of seekers.
+              Dream Nova V5 deploys self-mutating polymorphic defense,
+              zero-knowledge verification, and autonomous AI threat response.
+              One platform. Zero compromise.
             </motion.p>
 
             <motion.div
-              className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
-              initial={{ opacity: 0, y: 20 }}
+              className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" as const }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" as const }}
             >
               <Button
                 variant="primary"
                 size="lg"
                 icon={<ArrowRight className="w-5 h-5" />}
                 iconPosition="right"
-                href="/checkout"
+                href="/contact"
               >
-                Get Your Nova Key — ${SACRED_NUMBERS.SAG.value}
+                Request Shadow Mode Demo
               </Button>
-              <Button variant="outline" size="lg" href="/nova-key">
-                Learn More
+              <Button variant="outline" size="lg" href="/whitepaper">
+                Read the Whitepaper
               </Button>
             </motion.div>
 
             <motion.div
-              className="mt-10 flex items-center gap-6 justify-center lg:justify-start"
+              className="mt-8 flex items-center gap-6 justify-center lg:justify-start"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.6, ease: "easeOut" as const }}
+              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" as const }}
             >
               {[
-                { icon: Nfc, label: "DESFire EV3" },
-                { icon: Shield, label: "zk-SNARK" },
-                { icon: Zap, label: "Sub-5ms" },
+                { icon: Shield, label: "Rust-Native" },
+                { icon: Lock, label: "SOC 2 Ready" },
+                { icon: Zap, label: "EU AI Act Compliant" },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-2 text-sacred-gray/50">
-                  <Icon className="w-4 h-4 text-sacred-gold/60" />
-                  <span className="font-mono text-xs">{label}</span>
+                  <Icon className="w-3.5 h-3.5 text-sacred-gold/50" />
+                  <span className="font-mono text-[11px] tracking-wide">{label}</span>
                 </div>
               ))}
             </motion.div>
           </div>
 
-          {/* Right - Nova Key Card */}
+          {/* Right — Terminal */}
           <motion.div
-            className="flex-shrink-0"
-            initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" as const }}
+            className="flex-shrink-0 w-full max-w-[520px]"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" as const }}
           >
-            <div className="relative group cursor-pointer" style={{ perspective: "1000px" }}>
-              {/* Card glow */}
-              <div className="absolute -inset-4 bg-sacred-gold/10 rounded-3xl blur-2xl group-hover:bg-sacred-gold/20 transition-all duration-700" />
-              <div className="absolute -inset-8 bg-sacred-cyan/5 rounded-3xl blur-3xl" />
+            <div className="relative group">
+              <div className="absolute -inset-3 bg-sacred-gold/5 rounded-2xl blur-2xl group-hover:bg-sacred-gold/8 transition-all duration-700" />
 
-              {/* The NFC Card */}
-              <motion.div
-                className="relative w-[320px] h-[200px] sm:w-[380px] sm:h-[240px] rounded-2xl overflow-hidden"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" as const }}
-                whileHover={{ rotateY: 5, rotateX: -5 }}
-              >
-                {/* Card background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-sacred-black-medium via-sacred-black to-sacred-black-medium border border-sacred-gold/30 rounded-2xl" />
-
-                {/* Holographic shimmer */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sacred-gold/10 to-transparent animate-gold-shimmer bg-[length:200%_100%]" />
-
-                {/* Card content */}
-                <div className="relative z-10 h-full flex flex-col justify-between p-6 sm:p-8">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-cinzel text-lg text-sacred-gold tracking-[0.3em]">
-                        NOVA KEY
-                      </p>
-                      <p className="font-mono text-[10px] text-sacred-gray/40 mt-1">
-                        DESFire EV3 / NFC
-                      </p>
-                    </div>
-                    <div className="w-10 h-10 rounded-lg bg-sacred-gold/10 border border-sacred-gold/20 flex items-center justify-center">
-                      <Nfc className="w-5 h-5 text-sacred-gold" />
-                    </div>
+              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-[#0C0C14]">
+                {/* Title bar */}
+                <div className="flex items-center gap-2 px-4 py-3 bg-white/[0.03] border-b border-white/5">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/70" />
                   </div>
-
-                  <div>
-                    <p className="font-mono text-sm text-sacred-gray/60 tracking-[0.5em]">
-                      **** **** **** 0063
-                    </p>
-                    <div className="flex items-end justify-between mt-3">
-                      <div>
-                        <p className="font-rajdhani text-[10px] text-sacred-gray/40 uppercase tracking-wider">
-                          Covenant Holder
-                        </p>
-                        <p className="font-rajdhani text-sm text-sacred-white">
-                          DREAM NOVA V5
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-rajdhani text-[10px] text-sacred-gray/40 uppercase tracking-wider">
-                          Sacred ID
-                        </p>
-                        <p className="font-mono text-sm text-sacred-gold">
-                          {SACRED_NUMBERS.SAG.hebrew}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <span className="font-mono text-[11px] text-sacred-gray/40 ml-2">
+                    nova-cli — shadow_deploy
+                  </span>
                 </div>
 
-                {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-sacred-gold/30 rounded-tl-2xl" />
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-sacred-gold/30 rounded-br-2xl" />
-              </motion.div>
+                {/* Terminal content */}
+                <div className="p-4 sm:p-5 font-mono text-[11px] sm:text-xs leading-relaxed min-h-[320px]">
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: {},
+                      visible: {
+                        transition: { staggerChildren: 0.12, delayChildren: 0.8 },
+                      },
+                    }}
+                  >
+                    {TERMINAL_LINES.map((line, i) => (
+                      <motion.div
+                        key={i}
+                        variants={{
+                          hidden: { opacity: 0, x: -8 },
+                          visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+                        }}
+                        className={`${terminalColorMap[line.color]} ${
+                          line.text === "" ? "h-3" : ""
+                        }`}
+                      >
+                        {line.text}
+                      </motion.div>
+                    ))}
+                  </motion.div>
+
+                  <motion.span
+                    className="inline-block w-2 h-4 bg-sacred-gold/60 mt-2"
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" as const }}
+                  />
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
-
-        {/* Sacred numbers bar */}
-        <motion.div
-          className="mt-20 flex items-center justify-center gap-8 sm:gap-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" as const }}
-        >
-          {Object.values(SACRED_NUMBERS)
-            .slice(0, 3)
-            .map((num) => (
-              <div key={num.value} className="text-center group cursor-default">
-                <p className="font-cinzel text-3xl sm:text-4xl text-sacred-gold/30 group-hover:text-sacred-gold/60 transition-colors">
-                  {num.value}
-                </p>
-                <p className="font-rajdhani text-xs text-sacred-gray/30 mt-1">
-                  {num.name}
-                </p>
-              </div>
-            ))}
-        </motion.div>
       </div>
 
       {/* Scroll indicator */}

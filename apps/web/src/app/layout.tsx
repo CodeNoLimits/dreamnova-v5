@@ -86,12 +86,12 @@ const jsonLd = {
   sameAs: [
     SITE_CONFIG.social.twitter,
     SITE_CONFIG.social.github,
-    SITE_CONFIG.social.telegram,
+    SITE_CONFIG.social.linkedin,
   ],
   contactPoint: {
     "@type": "ContactPoint",
     email: SITE_CONFIG.email,
-    contactType: "customer service",
+    contactType: "sales",
   },
 };
 

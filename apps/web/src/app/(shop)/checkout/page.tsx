@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Nfc, Check, CreditCard, Lock, ArrowRight, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { PRICING_TIERS, SACRED_NUMBERS } from "@/lib/constants";
+import { NOVA_KEY_TIERS, SACRED_NUMBERS } from "@/lib/constants";
 import { toast } from "sonner";
 
 export default function CheckoutPage() {
@@ -14,7 +14,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-  const tier = PRICING_TIERS[selectedTier];
+  const tier = NOVA_KEY_TIERS[selectedTier];
   const total = tier.price * quantity;
 
   async function handleCheckout(e: FormEvent) {
@@ -89,7 +89,7 @@ export default function CheckoutPage() {
                 Choose Your Covenant
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {PRICING_TIERS.map((t, i) => (
+                {NOVA_KEY_TIERS.map((t, i) => (
                   <button
                     key={t.name}
                     onClick={() => setSelectedTier(i)}

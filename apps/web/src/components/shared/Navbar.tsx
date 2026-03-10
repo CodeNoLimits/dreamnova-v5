@@ -3,15 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag, User, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 const navLinks = [
-  { href: "/nova-key", label: "Nova Key" },
-  { href: "/source-code", label: "Source Code" },
+  { href: "/#platform", label: "Platform" },
+  { href: "/architecture", label: "Technology" },
   { href: "/research", label: "Research" },
-  { href: "/architecture", label: "Architecture" },
-  { href: "/manifesto", label: "Manifesto" },
+  { href: "/whitepaper", label: "Whitepaper" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -49,21 +48,25 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-10 h-10 flex items-center justify-center">
-                <div className="absolute inset-0 bg-sacred-gold/20 rounded-xl group-hover:bg-sacred-gold/30 transition-colors" />
-                <Sparkles className="w-5 h-5 text-sacred-gold relative z-10" />
+              <div className="relative w-9 h-9 flex items-center justify-center">
+                <div className="absolute inset-0 bg-sacred-gold/20 rounded-lg group-hover:bg-sacred-gold/30 transition-colors" />
+                <span className="font-cinzel text-sm text-sacred-gold font-bold relative z-10">
+                  DN
+                </span>
               </div>
               <div className="flex flex-col">
-                <span className="font-cinzel text-lg text-sacred-white tracking-[0.2em] leading-none">
+                <span className="font-cinzel text-base text-sacred-white tracking-[0.15em] leading-none">
                   DREAM NOVA
                 </span>
-                <span className="font-mono text-[10px] text-sacred-gold/60 tracking-widest">
-                  V5.0
+                <span className="font-mono text-[9px] text-sacred-gray/50 tracking-widest">
+                  AUTONOMOUS DEFENSE
                 </span>
               </div>
             </Link>
 
+            {/* Desktop nav */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -77,24 +80,14 @@ export function Navbar() {
               ))}
             </div>
 
+            {/* Desktop CTA */}
             <div className="hidden lg:flex items-center gap-3">
-              <Link
-                href="/checkout"
-                className="p-2 text-sacred-gray hover:text-sacred-gold transition-colors relative"
-              >
-                <ShoppingBag className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/login"
-                className="p-2 text-sacred-gray hover:text-sacred-gold transition-colors"
-              >
-                <User className="w-5 h-5" />
-              </Link>
-              <Button variant="primary" size="sm" href="/checkout">
-                Get Nova Key — $63
+              <Button variant="primary" size="sm" href="/contact">
+                Request Demo
               </Button>
             </div>
 
+            {/* Mobile toggle */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               className="lg:hidden p-2 text-sacred-gray hover:text-sacred-white transition-colors"
@@ -106,6 +99,7 @@ export function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -132,12 +126,9 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <div className="mt-6 flex flex-col gap-3 w-full max-w-xs">
-                <Button variant="outline" fullWidth href="/login">
-                  Sign In
-                </Button>
-                <Button variant="primary" fullWidth href="/checkout">
-                  Get Nova Key — $63
+              <div className="mt-6 w-full max-w-xs">
+                <Button variant="primary" fullWidth href="/contact">
+                  Request Demo
                 </Button>
               </div>
             </div>

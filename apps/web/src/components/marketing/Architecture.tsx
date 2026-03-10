@@ -15,7 +15,7 @@ export function Architecture() {
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden">
       <div className="absolute inset-0 bg-sacred-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(212,175,55,0.03)_0%,_transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(212,175,55,0.02)_0%,_transparent_50%)]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -26,22 +26,23 @@ export function Architecture() {
           transition={{ duration: 0.6, ease: "easeOut" as const }}
         >
           <p className="font-mono text-xs text-sacred-gold tracking-[0.3em] uppercase mb-4">
-            The Master Plan
+            Roadmap
           </p>
-          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-sacred-white tracking-wide">
-            Five{" "}
+          <h2 className="font-rajdhani font-bold text-3xl sm:text-4xl lg:text-5xl text-sacred-white tracking-tight">
+            From{" "}
             <span className="bg-gradient-to-r from-sacred-gold to-sacred-cyan bg-clip-text text-transparent">
-              Phases
-            </span>
+              Prototype
+            </span>{" "}
+            to Platform Standard
           </h2>
           <p className="mt-4 font-rajdhani text-lg text-sacred-gray max-w-2xl mx-auto">
-            Named after the five books of Torah. Each phase builds upon the last,
-            moving toward the complete vision of $63M Hafatsa worldwide.
+            Five phases. Each builds on proven cryptographic primitives and
+            real-world enterprise deployments. No vaporware — every milestone
+            has shipped code behind it.
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Timeline line */}
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-sacred-gold/30 via-sacred-cyan/20 to-transparent" />
 
           <div className="space-y-8 lg:space-y-12">
@@ -64,7 +65,6 @@ export function Architecture() {
                     ease: "easeOut" as const,
                   }}
                 >
-                  {/* Timeline dot */}
                   <div className="absolute left-4 md:left-1/2 -translate-x-1/2 z-10">
                     <div
                       className={`w-8 h-8 rounded-full ${status.bg} ${status.border} border flex items-center justify-center`}
@@ -75,7 +75,6 @@ export function Architecture() {
                     </div>
                   </div>
 
-                  {/* Content card */}
                   <div
                     className={`ml-14 md:ml-0 md:w-[45%] ${
                       isEven ? "md:pr-8" : "md:pl-8"
@@ -95,7 +94,7 @@ export function Architecture() {
                         </span>
                       </div>
 
-                      <h3 className="font-cinzel text-xl text-sacred-white tracking-wide mb-2">
+                      <h3 className="font-rajdhani font-bold text-xl text-sacred-white tracking-tight mb-2">
                         {phase.name}
                       </h3>
                       <p className="font-rajdhani text-sm text-sacred-gray mb-4">
@@ -104,10 +103,7 @@ export function Architecture() {
 
                       <ul className="space-y-2">
                         {phase.milestones.map((milestone) => (
-                          <li
-                            key={milestone}
-                            className="flex items-start gap-2"
-                          >
+                          <li key={milestone} className="flex items-start gap-2">
                             <span
                               className={`w-1 h-1 rounded-full mt-2 shrink-0 ${
                                 phase.status === "active"
@@ -124,7 +120,6 @@ export function Architecture() {
                     </div>
                   </div>
 
-                  {/* Spacer for the other side */}
                   <div className="hidden md:block md:w-[45%]" />
                 </motion.div>
               );

@@ -1,52 +1,27 @@
-import type { SacredNumber, PricingTier, Pillar, Phase } from "@/types";
+import type { PricingTier, Pillar, Phase, Metric } from "@/types";
 
-export const SACRED_NUMBERS: Record<string, SacredNumber> = {
-  SAG: {
-    value: 63,
-    name: "SaG",
-    meaning: "The filling of the divine name YHVH at the level of Binah (Understanding)",
-    hebrew: "סג",
-  },
-  NACHMAN: {
-    value: 148,
-    name: "Nachman",
-    meaning: "The gematria of Rabbi Nachman (נחמן)",
-    hebrew: "נחמן",
-  },
-  TIKKUN: {
-    value: 613,
-    name: "Tikkun Master",
-    meaning: "Total number of commandments — complete rectification",
-    hebrew: "תרי״ג",
-  },
-  PAIR: {
-    value: 99,
-    name: "Pair Covenant",
-    meaning: "Two souls bound in sacred partnership",
-    hebrew: "צט",
-  },
-  PLATINUM: {
-    value: 149,
-    name: "Platinum",
-    meaning: "Beyond the individual — communal elevation",
-    hebrew: "קמט",
-  },
-};
+// Backward-compatible sacred numbers (used by Nova Key checkout & product pages)
+export const SACRED_NUMBERS = {
+  SAG: { value: 63, name: "SaG", meaning: "Divine name gematria", hebrew: "\u05E1\u05D2" },
+  NACHMAN: { value: 148, name: "Nachman", meaning: "Rabbi Nachman gematria", hebrew: "\u05E0\u05D7\u05DE\u05DF" },
+  TIKKUN: { value: 613, name: "Tikkun Master", meaning: "Total commandments", hebrew: "\u05EA\u05E8\u05D9\u05F4\u05D2" },
+  PAIR: { value: 99, name: "Pair Covenant", meaning: "Sacred partnership", hebrew: "\u05E6\u05D8" },
+  PLATINUM: { value: 149, name: "Platinum", meaning: "Communal elevation", hebrew: "\u05E7\u05DE\u05D8" },
+} as const;
 
-export const PRICING_TIERS: PricingTier[] = [
+// Nova Key consumer tiers (checkout page)
+export const NOVA_KEY_TIERS = [
   {
     name: "Covenant Pack",
     price: 63,
     currency: "USD",
-    description: "Your sacred key to the Nova network. One NFC card, infinite potential.",
+    description: "Your key to the Nova network.",
     features: [
       "1x Nova Key NFC Card (DESFire EV3)",
-      "zk-SNARK Identity Verification",
-      "Tikkun HaKlali Portal Access",
-      "Azamra OS Lifetime License",
-      "Hafatsa Point System Entry",
-      "Sacred Geometry Engravings",
-      "Priority Community Access",
+      "Zero-knowledge identity verification",
+      "Platform portal access",
+      "Lifetime license",
+      "Priority community access",
     ],
     sacredNumber: SACRED_NUMBERS.SAG,
     popular: true,
@@ -55,14 +30,12 @@ export const PRICING_TIERS: PricingTier[] = [
     name: "Pair Covenant",
     price: 99,
     currency: "USD",
-    description: "Two keys, one mission. Share the light with someone you love.",
+    description: "Two keys, one mission.",
     features: [
       "2x Nova Key NFC Cards",
       "Everything in Covenant Pack",
-      "Shared Hafatsa Dashboard",
-      "Pair Meditation Sync",
-      "Exclusive Pair Content",
-      "Matching Sacred Engravings",
+      "Shared dashboard",
+      "Pair content access",
     ],
     sacredNumber: SACRED_NUMBERS.PAIR,
   },
@@ -70,143 +43,219 @@ export const PRICING_TIERS: PricingTier[] = [
     name: "Platinum Covenant",
     price: 149,
     currency: "USD",
-    description: "For the serious seeker. Premium materials, premium access.",
+    description: "Premium materials, premium access.",
     features: [
       "1x Platinum Nova Key (Stainless Steel)",
       "Everything in Covenant Pack",
-      "Private Community Channel",
-      "1-on-1 Onboarding Session",
-      "Early Access to New Features",
-      "Lifetime Priority Support",
-      "Research Paper Access",
+      "Private channel access",
+      "1-on-1 onboarding session",
+      "Lifetime priority support",
     ],
     sacredNumber: SACRED_NUMBERS.PLATINUM,
   },
+];
+
+export const METRICS: Metric[] = [
+  { value: "< 5ms", label: "Threat Response", sublabel: "Zero-copy proof verification" },
+  { value: "99.97%", label: "Detection Rate", sublabel: "GNN anomaly classification" },
+  { value: "6", label: "Isolation Levels", sublabel: "Hypervisor sandboxing" },
+  { value: "0", label: "Data Exposed", sublabel: "Zero-knowledge architecture" },
 ];
 
 export const PILLARS: Pillar[] = [
   {
     name: "Evolutrix",
     icon: "Brain",
+    subtitle: "Polymorphic Meta-Language Compiler",
     description:
-      "Artificial Super Learning engine that evolves with each user interaction. Powered by sacred algorithms derived from Likutey Moharan's 613-layer architecture.",
+      "Self-evolving defense that mutates its own instruction set, data layouts, and execution paths every cycle. Attackers reverse-engineer a ghost — the real system has already moved.",
     features: [
-      "Neural pathway mapping based on Torah learning patterns",
-      "Adaptive difficulty scaling using Kabbalistic progression",
-      "Cross-reference engine spanning 10,000+ sacred texts",
-      "Real-time insight generation with source attribution",
+      "AMTD — Automated Moving Target Defense with rolling cryptographic keys",
+      "DSLR — Data Structure Layout Randomization preventing memory exploitation",
+      "ISR — Instruction Set Randomization via polymorphic AST mutation",
+      "MTD — Moving Target Decoys with phantom node injection",
     ],
     color: "#D4AF37",
+    metric: { value: "10^18", label: "unique configurations per cycle" },
   },
   {
     name: "Antimatrix",
     icon: "Shield",
+    subtitle: "AI Confinement Hypervisor",
     description:
-      "Zero-knowledge privacy layer ensuring your spiritual journey remains sovereign. No data harvesting, no surveillance capitalism.",
+      "Formally verified sandboxing for AI workloads. Six isolation levels from standard containerization to complete immolation. Constitutional constraints enforced at the hardware level.",
     features: [
-      "zk-SNARK identity proofs — verify without revealing",
-      "End-to-end encrypted learning sessions",
-      "On-device processing for sensitive content",
-      "GDPR/EU AI Act compliant by design",
+      "CSDD — Constitutional Spec-Driven Development with Z3 SMT verification",
+      "6 isolation levels: Standard → Elevated → Quarantine → Containment → Lockdown → Immolation",
+      "Real-time resource budgeting with Wasmtime fuel system",
+      "Hardware-backed enforcement via Secure Enclave",
     ],
     color: "#00D4FF",
+    metric: { value: "100%", label: "formal verification coverage" },
   },
   {
-    name: "Nova Tokenomics",
-    icon: "Coins",
+    name: "Tzimtzum",
+    icon: "Lock",
+    subtitle: "Zero-Knowledge Verification Engine",
     description:
-      "Hafatsa Points reward system that turns spiritual growth into measurable impact. Every scan, every share, every prayer counts.",
+      "Prove identity, compliance, and integrity without exposing a single byte of sensitive data. Halo2 zk-SNARKs deliver cryptographic certainty in under 50 milliseconds.",
     features: [
-      "Earn points through NFC scans and content sharing",
-      "Community leaderboards with sacred level progression",
-      "Referral bonuses that multiply your impact",
-      "Redeemable for premium content and physical items",
+      "Halo2 zk-SNARKs with Plonkish arithmetization — no trusted setup required",
+      "Solid-Liquid state transitions: encrypted on disk, projected to RAM only on valid proof",
+      "Merkle-based identity verification without data exposure",
+      "VDF time-barriers preventing replay and pre-computation attacks",
     ],
     color: "#D4AF37",
+    metric: { value: "< 50ms", label: "proof generation time" },
   },
   {
-    name: "Mac M4 Infrastructure",
-    icon: "Server",
+    name: "Esther AI",
+    icon: "Activity",
+    subtitle: "Autonomous Threat Intelligence",
     description:
-      "Built on Apple Silicon M4 Max architecture. 40-core GPU, 128GB unified memory. Edge computing for the sacred.",
+      "Shannon entropy derivatives and Graph Neural Networks detect anomalies invisible to signature-based systems. Phantom FLOP detection catches supply-chain compromises at the silicon level.",
     features: [
-      "Sub-5ms local inference for RAG queries",
-      "FAISS vector store with 50,000+ embeddings",
-      "Multi-agent orchestration (CrewAI + LangGraph)",
-      "Self-healing infrastructure with PM2 process management",
+      "Shannon entropy derivative analysis for statistical anomaly detection",
+      "GNN with multi-head graph attention — learns your network topology",
+      "PMU/kperf Phantom FLOP detection for hardware-level supply chain security",
+      "Autonomous response daemon with sub-second containment",
     ],
     color: "#00D4FF",
+    metric: { value: "1.846 bits", label: "entropy baseline H(F)" },
+  },
+];
+
+export const PRICING_TIERS: PricingTier[] = [
+  {
+    name: "Sentinel",
+    price: "$250K",
+    period: "/year",
+    description:
+      "Single-site deployment for organizations entering autonomous defense.",
+    features: [
+      "Up to 500 endpoints",
+      "Evolutrix polymorphic defense",
+      "Tzimtzum zero-knowledge proofs",
+      "Esther AI threat monitoring",
+      "Standard isolation (Level 1-3)",
+      "8×5 support with 4-hour SLA",
+      "Quarterly threat intelligence reports",
+    ],
+    cta: "Request Demo",
+  },
+  {
+    name: "Fortress",
+    price: "$750K",
+    period: "/year",
+    description:
+      "Multi-site deployment with full SOC integration and 24/7 autonomous response.",
+    features: [
+      "Unlimited endpoints",
+      "Full Antimatrix hypervisor (all 6 levels)",
+      "SIEM / SOAR / EDR integration suite",
+      "DAG-UTXO immutable audit ledger",
+      "Dedicated threat hunting team",
+      "24/7 support with 1-hour SLA",
+      "Custom constitutional policies",
+      "On-site deployment engineering",
+    ],
+    popular: true,
+    cta: "Request Demo",
+    highlight: "Most Deployed",
+  },
+  {
+    name: "Hegemony",
+    price: "Custom",
+    period: "",
+    description:
+      "Full platform sovereignty. Sealed hardware. Dedicated engineering team. Your rules.",
+    features: [
+      "Everything in Fortress",
+      "Hardware-as-a-Service (sealed compute nodes)",
+      "Dedicated engineering team (4-8 FTE)",
+      "Custom Evolutrix rule engine",
+      "Private DAG ledger instance",
+      "Board-level security briefings",
+      "Patent-protected deployment",
+      "Nova silicon integration roadmap",
+    ],
+    cta: "Contact Sales",
   },
 ];
 
 export const PHASES: Phase[] = [
   {
     number: 1,
-    name: "Genesis",
-    timeline: "Q1 2026",
-    description: "Foundation. Launch Nova Key, establish the covenant network.",
+    name: "Core Engine",
+    timeline: "Q1–Q2 2026",
+    description:
+      "Rust-native foundation with production-grade proof systems and polymorphic compilation.",
     milestones: [
-      "Nova Key NFC card production (1,000 units)",
-      "DreamNova.com launch with full e-commerce",
-      "Tikkun HaKlali portal activation",
-      "Stripe + PayPal payment integration",
-      "Community Discord/Telegram launch",
+      "7 Rust crates: Evolutrix, Antimatrix, Tzimtzum, NovaMorph, VDF, NFC-Bridge, DAG-Ledger",
+      "54 verified tests across all security modules",
+      "Halo2 zk-SNARK circuit with Merkle inclusion proofs",
+      "Esther AI entropy monitor with GNN anomaly detection",
+      "Shadow Mode deployment for early enterprise partners",
     ],
     status: "active",
   },
   {
     number: 2,
-    name: "Exodus",
-    timeline: "Q2-Q3 2026",
-    description: "Scale. 10,000 Nova Keys distributed worldwide.",
+    name: "Enterprise Integration",
+    timeline: "Q3–Q4 2026",
+    description:
+      "SOC-ready connectors and compliance automation for regulated industries.",
     milestones: [
-      "Mobile app launch (iOS + Android)",
-      "Breslov RAG SaaS public beta ($49/mo)",
-      "University partnerships (Bar-Ilan, Hebrew U)",
-      "IIA Pre-Seed Grant application",
-      "Multi-language support (HE/EN/FR/ES/RU/AR)",
+      "SIEM integration (Splunk, Sentinel, QRadar)",
+      "SOAR playbook automation",
+      "EDR connector framework",
+      "SOC 2 Type II certification",
+      "ISO 27001 alignment",
     ],
     status: "upcoming",
   },
   {
     number: 3,
-    name: "Leviticus",
-    timeline: "Q4 2026 - Q1 2027",
-    description: "Sanctify. DreamOS operating system release.",
+    name: "Autonomous Defense",
+    timeline: "2027",
+    description:
+      "Self-healing infrastructure with AI-driven threat response and zero human intervention.",
     milestones: [
-      "DreamOS v1.0 public release",
-      "ASL (Artificial Super Learning) patent filing",
-      "100,000 Nova Keys milestone",
-      "Series A fundraising ($5M target)",
-      "Research paper publication",
+      "Autonomous incident response engine",
+      "Self-healing network topology",
+      "Predictive threat modeling (72-hour horizon)",
+      "Cross-tenant threat intelligence sharing",
+      "Federal certification (FedRAMP, CMMC)",
     ],
     status: "upcoming",
   },
   {
     number: 4,
-    name: "Numbers",
-    timeline: "2027-2028",
-    description: "Count. Build the sacred census of seekers worldwide.",
+    name: "Industry Verticals",
+    timeline: "2027–2028",
+    description:
+      "Purpose-built modules for pharmaceutical, defense, and high-frequency trading.",
     milestones: [
-      "1M Nova Keys distributed",
-      "DreamOS marketplace launch",
-      "Institutional partnerships",
-      "Revenue target: $10M ARR",
-      "Global Hafatsa network operational",
+      "Pharma: GxP-compliant data integrity proofs",
+      "Defense: ITAR/EAR automated compliance",
+      "HFT: Sub-microsecond threat detection",
+      "Healthcare: HIPAA zero-knowledge audit",
+      "Critical infrastructure: ICS/SCADA protection",
     ],
     status: "upcoming",
   },
   {
     number: 5,
-    name: "Deuteronomy",
-    timeline: "2028-2033",
-    description: "Complete. $63M Hafatsa — the full vision realized.",
+    name: "Hardware Sovereignty",
+    timeline: "2028+",
+    description:
+      "Sealed compute nodes with Nova silicon. The final layer — hardware you can mathematically trust.",
     milestones: [
-      "10M Nova Keys worldwide",
-      "$63M cumulative revenue",
-      "ASL standard adopted by major institutions",
-      "Self-sustaining Hafatsa network",
-      "Na Nach Nachma Nachman MeUman — global reach",
+      "Nova silicon: purpose-built security processor",
+      "Sealed compute nodes (tamper-evident HaaS)",
+      "DNA-level data storage integration",
+      "Global mesh network deployment",
+      "Industry standard ratification (IEEE/NIST)",
     ],
     status: "upcoming",
   },
@@ -229,16 +278,56 @@ export const COLORS = {
 
 export const SITE_CONFIG = {
   name: "Dream Nova",
-  tagline: "Stop Calculating. Start Living.",
+  tagline: "Autonomous Cybersecurity Platform",
   description:
-    "Sacred NFC technology merging Breslov wisdom with cutting-edge AI. Your key to the Nova network.",
+    "Self-evolving polymorphic defense, zero-knowledge verification, and autonomous AI threat response. Enterprise-grade cybersecurity that evolves faster than the threat.",
   url: "https://dreamnova.vercel.app",
   ogImage: "/og-image.png",
   creator: "DreamNova Inc.",
-  email: "contact@dreamnova.com",
+  email: "enterprise@dreamnova.com",
   social: {
     twitter: "https://x.com/dreamnova",
-    github: "https://github.com/CodeNoLimits",
-    telegram: "https://t.me/dreamnova",
+    github: "https://github.com/CodeNoLimits/dreamnova-v5",
+    linkedin: "https://linkedin.com/company/dreamnova",
   },
 } as const;
+
+export const TERMINAL_LINES = [
+  { text: "$ nova deploy --mode=shadow --cluster=primary", color: "white" },
+  { text: "", color: "dim" },
+  { text: "[EVOLUTRIX] Compiling polymorphic AST...", color: "gold" },
+  { text: "[EVOLUTRIX] \u2713 DSLR randomization applied (seed: 0x7A3F)", color: "green" },
+  { text: "[EVOLUTRIX] \u2713 ISR rolling key derived (256-bit)", color: "green" },
+  { text: "", color: "dim" },
+  { text: "[TZIMTZUM] Generating Halo2 zk-SNARK proofs...", color: "cyan" },
+  { text: "[TZIMTZUM] \u2713 Proof verified in 4.7ms", color: "green" },
+  { text: "", color: "dim" },
+  { text: "[ANTIMATRIX] Hypervisor isolation: LEVEL_4_QUARANTINE", color: "yellow" },
+  { text: "[ANTIMATRIX] \u2713 Constitutional layers: 4/4 verified", color: "green" },
+  { text: "", color: "dim" },
+  { text: "[ESTHER] Entropy baseline: H(F) = 1.846 bits", color: "cyan" },
+  { text: "[ESTHER] \u2713 GNN anomaly score: 0.023 (nominal)", color: "green" },
+  { text: "", color: "dim" },
+  { text: "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501", color: "dim" },
+  { text: "\u2713 Shadow Mode ACTIVE \u2014 0 data exposed", color: "gold" },
+  { text: "\u2713 1,247 endpoints protected", color: "gold" },
+  { text: "\u2713 Autonomous threat response: ARMED", color: "gold" },
+] as const;
+
+export const RUST_CODE = `// crates/evolutrix/src/mutator.rs — Line 47
+impl Mutator {
+    pub fn evolve(&self, ast: &mut AbstractSyntaxTree) {
+        // Phase 1: DSLR — Randomize memory layout
+        self.randomize_field_order(ast);
+
+        // Phase 2: ISR — Encrypt with rolling key
+        let key = self.derive_rolling_key();
+        self.encrypt_instructions(ast, &key);
+
+        // Phase 3: MTD — Inject phantom decoys
+        self.inject_decoys(ast, DecoyStrategy::Adaptive);
+
+        // The attacker's reverse engineering is obsolete
+        // before they finish analyzing the previous cycle
+    }
+}`;

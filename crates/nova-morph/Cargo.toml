@@ -1,11 +1,15 @@
 [package]
 name = "nova-morph"
-description = "Arena allocation engine — O(1) AST mutation with bumpalo"
-edition.workspace = true
 version.workspace = true
+edition.workspace = true
 license.workspace = true
 repository.workspace = true
 authors.workspace = true
+description = "O(1) arena allocator for AST nodes using bumpalo — zero-copy, cache-friendly, bulk-deallocatable"
+readme = "README.md"
+keywords = ["arena", "allocator", "ast", "bumpalo", "compiler"]
+categories = ["memory-management", "data-structures", "compilers"]
+rust-version = "1.85"
 
 [dependencies]
 bumpalo = { workspace = true }

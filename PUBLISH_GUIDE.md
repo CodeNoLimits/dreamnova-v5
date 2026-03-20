@@ -13,7 +13,7 @@ cargo login
 
 # 2. Vérifier que tout compile
 cd ~/Desktop/dreamnova-v5
-cargo test --workspace   # doit afficher 94 passed, 0 failed
+cargo test --workspace   # doit afficher 103 passed, 0 failed
 ```
 
 ## Publication dans l'ordre (dépendances d'abord)
@@ -68,7 +68,7 @@ URLs sur crates.io:
 - ✅ LICENSE-MIT + LICENSE-APACHE dans chaque crate
 - ✅ keywords + categories dans chaque Cargo.toml
 - ✅ readme = "README.md" dans chaque Cargo.toml
-- ✅ 94 tests, 0 failures
+- ✅ 103 tests, 0 failures
 - ✅ Dry-run PASS sur tous les 7 crates
 
 ---

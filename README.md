@@ -1,6 +1,6 @@
 # DreamNova V5 — Post-Quantum AI Infrastructure
 
-**7 Rust crates · 94 tests · 0 failures · MIT/Apache-2.0**
+**7 Rust crates · 103 tests · 0 failures · MIT/Apache-2.0**
 
 DreamNova V5 is a monorepo for post-quantum AI infrastructure: sparse tensor routing, Moving Target Defense compilation, zero-knowledge identity, DAG consensus, and formal verification — all production-grade, all prototyped.
 
@@ -31,7 +31,7 @@ DreamNova V5 is a monorepo for post-quantum AI infrastructure: sparse tensor rou
 
 ```bash
 cargo build --workspace         # Build all 7 crates
-cargo test --workspace          # Run 94 tests (0 failures expected)
+cargo test --workspace          # Run 103 tests (0 failures expected)
 cargo build --release           # Optimized release (fat LTO)
 ```
 
@@ -94,7 +94,7 @@ dreamnova-v5/
 ## Test status
 
 ```
-antimatrix   19 tests  ✅
+antimatrix   27 tests  ✅
 dag-ledger   21 tests  ✅
 evolutrix     7 tests  ✅
 nfc-bridge    8 tests  ✅
@@ -102,7 +102,7 @@ nova-morph    7 tests  ✅
 tzimtzum     25 tests  ✅  (includes vdf_nonce integration)
 vdf           7 tests  ✅
 ─────────────────────────
-Total        94 tests  ✅  0 failures
+Total       103 tests  ✅  0 failures
 ```
 
 ---

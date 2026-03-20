@@ -29,17 +29,56 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
+        const source = session.metadata?.source;
+        const plan = session.metadata?.plan;
         console.log("Checkout completed:", {
           sessionId: session.id,
           email: session.customer_email,
           amount: session.amount_total,
-          tier: session.metadata?.tier,
+          source,
+          plan,
         });
+        if (source === "breslov-rag") {
+          // RAG subscription activated — TODO: provision access in Supabase
+          console.log("Breslov RAG subscription started:", { plan, email: session.customer_email });
+        } else {
+          // Nova Key one-time purchase — TODO: generate activation code
+        }
+        break;
+      }
 
-        // TODO: Create order in Supabase
-        // TODO: Generate Nova Key activation code
-        // TODO: Send confirmation email via Resend
-        // TODO: Award initial Hafatsa points
+      case "customer.subscription.created": {
+        const sub = event.data.object as Stripe.Subscription;
+        const plan = sub.metadata?.plan;
+        const source = sub.metadata?.source;
+        console.log("Subscription created:", { id: sub.id, plan, source, status: sub.status });
+        break;
+      }
+
+      case "customer.subscription.updated": {
+        const sub = event.data.object as Stripe.Subscription;
+        console.log("Subscription updated:", { id: sub.id, status: sub.status });
+        break;
+      }
+
+      case "customer.subscription.deleted": {
+        const sub = event.data.object as Stripe.Subscription;
+        const plan = sub.metadata?.plan;
+        console.log("Subscription cancelled:", { id: sub.id, plan });
+        // TODO: revoke RAG access in Supabase
+        break;
+      }
+
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log("Invoice paid:", { id: invoice.id, amount: invoice.amount_paid });
+        break;
+      }
+
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log("Invoice payment failed:", { id: invoice.id, attempt: invoice.attempt_count });
+        // TODO: send dunning email
         break;
       }
 
@@ -58,8 +97,6 @@ export async function POST(req: NextRequest) {
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
         console.log("Charge refunded:", charge.id);
-        // TODO: Update order status in Supabase
-        // TODO: Deactivate Nova Key
         break;
       }
 

@@ -97,3 +97,9 @@ pnpm-lock.yaml
 *.swp
 .cache/
 tmp/
+
+# IP / Legal — NEVER commit to public repo
+USPTO/
+LEGAL/
+PATENTS/
+

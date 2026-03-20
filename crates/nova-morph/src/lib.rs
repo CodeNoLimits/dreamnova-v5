@@ -257,7 +257,7 @@ impl WasmMemoryPool {
 
     /// Number of WASM pages currently in use.
     pub fn pages_used(&self) -> usize {
-        (self.arena.allocated_bytes() + self.page_size - 1) / self.page_size
+        self.arena.allocated_bytes().div_ceil(self.page_size)
     }
 
     /// Total logical allocations.

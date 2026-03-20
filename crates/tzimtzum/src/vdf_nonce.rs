@@ -54,8 +54,7 @@ fn default_modulus() -> BigUint {
     let mut bytes = [0xffu8; 32];
     bytes[0] = 0x7f; // clear top bit: 2^255 - 1
     // Subtract 19: adjust last byte
-    let n = BigUint::from_bytes_be(&bytes) - BigUint::from(19u32);
-    n
+    BigUint::from_bytes_be(&bytes) - BigUint::from(19u32)
 }
 
 // ---------------------------------------------------------------------------

@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/#platform", label: "Platform" },
   { href: "/architecture", label: "Technology" },
   { href: "/research", label: "Research" },
+  { href: "/rag", label: "Breslov AI" },
   { href: "/whitepaper", label: "Whitepaper" },
   { href: "/contact", label: "Contact" },
 ];

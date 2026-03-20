@@ -20,7 +20,7 @@ const footerSections = [
       { label: "Whitepaper", href: "/whitepaper" },
       { label: "Architecture", href: "/architecture" },
       { label: "Research", href: "/research" },
-      { label: "Source Code", href: "/source-code" },
+      { label: "Source Code", href: "https://github.com/CodeNoLimits/dreamnova-v5", external: true },
     ],
   },
   {
@@ -94,12 +94,23 @@ export function Footer() {
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="font-rajdhani text-sm text-sacred-gray hover:text-sacred-gold transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    {"external" in link && link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-rajdhani text-sm text-sacred-gray hover:text-sacred-gold transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="font-rajdhani text-sm text-sacred-gray hover:text-sacred-gold transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

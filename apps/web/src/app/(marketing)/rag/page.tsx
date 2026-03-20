@@ -152,7 +152,7 @@ export default function BreslovRAGPage() {
             <Button size="lg" className="bg-amber-500 hover:bg-amber-400 text-black font-bold">
               Try free — 3 questions <ArrowRight size={16} />
             </Button>
-            <Button size="lg" variant="ghost" className="border border-white/20 hover:border-amber-400/50">
+            <Button size="lg" variant="ghost" className="border border-white/20 hover:border-amber-400/50" onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}>
               See pricing
             </Button>
           </div>
@@ -231,7 +231,17 @@ export default function BreslovRAGPage() {
       <section id="pricing" className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="font-cinzel text-2xl md:text-3xl text-center mb-4">Pricing</h2>
-          <p className="text-gray-500 text-center mb-12">For individuals, synagogues, and institutions</p>
+          <p className="text-gray-500 text-center mb-8">For individuals, synagogues, and institutions</p>
+          <div className="max-w-sm mx-auto mb-10">
+            <label className="block text-gray-500 text-xs font-mono mb-2 text-center">YOUR EMAIL — 7-DAY FREE TRIAL</label>
+            <input
+              type="email"
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              placeholder="rabbi@nachman.fr"
+              className="w-full bg-white/[0.04] border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-amber-400/50 text-sm text-center"
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {plans.map((plan, i) => (
               <motion.div

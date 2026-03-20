@@ -30,6 +30,9 @@
 use sha2::{Digest, Sha256};
 use std::fmt;
 
+pub mod identity;
+pub use identity::{IdentityRegistry, MerkleTree};
+
 // ---------------------------------------------------------------------------
 // Error types
 // ---------------------------------------------------------------------------

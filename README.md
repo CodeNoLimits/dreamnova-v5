@@ -12,7 +12,7 @@ DreamNova V5 is a monorepo for post-quantum AI infrastructure: sparse tensor rou
 
 | Crate | Description | Comparable |
 |-------|-------------|------------|
-| [`antimatrix`](crates/antimatrix/) | Formal verification hypervisor — 6 isolation levels, 4 SEC-NOVA rules | Shape Security |
+| [`antimatrix`](crates/antimatrix/) | Formal verification hypervisor — 6 isolation levels, 6 SEC-NOVA rules | Shape Security |
 | [`tzimtzum`](crates/tzimtzum/) | ZK-SNARK circuit for NFC identity (Halo2/Plonkish, VDF anti-replay) | Aleo |
 | [`dag-ledger`](crates/dag-ledger/) | DAG-UTXO ledger with Proof-of-Shareholding + VDF epoch barriers | IOTA/Hedera |
 | [`evolutrix`](crates/evolutrix/) | Polymorphic compiler — DSLR, ISR (AES-256), junk injection (MTD) | Shape Security |

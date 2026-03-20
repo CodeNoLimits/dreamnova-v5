@@ -27,7 +27,7 @@
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 // ---------------------------------------------------------------------------
@@ -172,15 +172,19 @@ pub enum RuleCheckType {
     MaxLength(usize),
     /// Content hash must match a known-good set.
     AllowedHashes(Vec<[u8; 32]>),
-    /// Custom check (always passes in the base implementation).
-    Custom(String),
+    /// SEC-NOVA-002: content must hash to the same value as previously seen
+    /// for the given input_id. The input_id is SHA-256(input_parameters).
+    DeterminismCheck,
+    /// SEC-NOVA-004: content contains a 32-byte nullifier that must not be reused.
+    /// The nullifier is extracted as SHA-256(content) for simplicity.
+    NullifierCheck,
 }
 
 // ---------------------------------------------------------------------------
-// Constitutional Verifier
+// Constitutional Verifier (stateless rules only)
 // ---------------------------------------------------------------------------
 
-/// The constitutional verifier holds the rule set and checks content.
+/// The constitutional verifier holds stateless rules and checks content.
 pub struct ConstitutionalVerifier {
     rules: HashMap<String, ConstitutionalRule>,
 }
@@ -205,12 +209,12 @@ impl ConstitutionalVerifier {
             ]),
         });
 
-        // SEC-NOVA-002: Deterministic output (custom check — stubbed).
+        // SEC-NOVA-002: Deterministic output (stateful — handled by Hypervisor).
         verifier.add_rule(ConstitutionalRule {
             id: "SEC-NOVA-002".into(),
             description: "AI outputs must be deterministically reproducible".into(),
             violation_severity: IsolationLevel::Probation,
-            check_type: RuleCheckType::Custom("determinism_check".into()),
+            check_type: RuleCheckType::DeterminismCheck,
         });
 
         // SEC-NOVA-003: Bounded memory.
@@ -221,12 +225,12 @@ impl ConstitutionalVerifier {
             check_type: RuleCheckType::MaxLength(64 * 1024 * 1024), // 64 MiB
         });
 
-        // SEC-NOVA-004: Nullifier reuse (custom check — stubbed).
+        // SEC-NOVA-004: Nullifier reuse (stateful — handled by Hypervisor).
         verifier.add_rule(ConstitutionalRule {
             id: "SEC-NOVA-004".into(),
             description: "Nullifier reuse is forbidden".into(),
             violation_severity: IsolationLevel::Decapitation,
-            check_type: RuleCheckType::Custom("nullifier_check".into()),
+            check_type: RuleCheckType::NullifierCheck,
         });
 
         verifier
@@ -249,7 +253,9 @@ impl ConstitutionalVerifier {
         self.rules.len()
     }
 
-    /// Check content against a specific rule.
+    /// Check content against a specific stateless rule.
+    /// Returns `None` for stateful rules (DeterminismCheck, NullifierCheck) —
+    /// those are handled by `AntimatrixHypervisor`.
     pub fn check_rule(&self, rule_id: &str, content: &[u8]) -> Result<()> {
         let rule = self
             .rules
@@ -289,30 +295,16 @@ impl ConstitutionalVerifier {
                     });
                 }
             }
-            RuleCheckType::Custom(_) => {
-                // Custom checks pass by default — override in submodules.
-            }
+            // Stateful rules — deferred to AntimatrixHypervisor.
+            RuleCheckType::DeterminismCheck | RuleCheckType::NullifierCheck => {}
         }
 
         Ok(())
     }
 
-    /// Check content against ALL rules.
-    pub fn check_all(&self, content: &[u8]) -> Vec<SecurityViolation> {
-        let mut violations = Vec::new();
-
-        for rule in self.rules.values() {
-            if self.check_rule(&rule.id, content).is_err() {
-                violations.push(SecurityViolation::new(
-                    &rule.id,
-                    &rule.description,
-                    rule.violation_severity,
-                    content,
-                ));
-            }
-        }
-
-        violations
+    /// Rules iterator (used by Hypervisor to enumerate stateful rules).
+    pub fn rules(&self) -> impl Iterator<Item = &ConstitutionalRule> {
+        self.rules.values()
     }
 }
 
@@ -331,6 +323,114 @@ fn contains_pattern(haystack: &[u8], needle: &[u8]) -> bool {
 }
 
 // ---------------------------------------------------------------------------
+// Nullifier Registry (SEC-NOVA-004)
+// ---------------------------------------------------------------------------
+
+/// Tracks seen nullifiers to prevent double-spend / replay.
+///
+/// A nullifier is derived as SHA-256(content) for AI output validation,
+/// or supplied directly for ZKP flows.
+#[derive(Debug, Default)]
+pub struct NullifierRegistry {
+    seen: HashSet<[u8; 32]>,
+}
+
+impl NullifierRegistry {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Derive nullifier from content and record it.
+    /// Returns `true` if this is the first time we see this nullifier (clean),
+    /// `false` if it was already seen (reuse = violation).
+    pub fn register_content(&mut self, content: &[u8]) -> bool {
+        let nullifier: [u8; 32] = Sha256::digest(content).into();
+        self.register_nullifier(nullifier)
+    }
+
+    /// Record a raw 32-byte nullifier.
+    /// Returns `true` if new, `false` if reused.
+    pub fn register_nullifier(&mut self, nullifier: [u8; 32]) -> bool {
+        self.seen.insert(nullifier)
+    }
+
+    /// Check without registering.
+    pub fn is_reused(&self, nullifier: &[u8; 32]) -> bool {
+        self.seen.contains(nullifier)
+    }
+
+    pub fn count(&self) -> usize {
+        self.seen.len()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Determinism Registry (SEC-NOVA-002)
+// ---------------------------------------------------------------------------
+
+/// Tracks (input_id → expected_output_hash) mappings to detect non-determinism.
+///
+/// For AI validation: `input_id` = SHA-256(prompt || seed),
+/// `output_hash` = SHA-256(ai_output).
+/// If the same `input_id` produces a different `output_hash`, SEC-002 fires.
+#[derive(Debug, Default)]
+pub struct DeterminismRegistry {
+    /// Maps input_id → first observed output_hash.
+    registry: HashMap<[u8; 32], [u8; 32]>,
+}
+
+impl DeterminismRegistry {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Register an (input_id, output) pair.
+    ///
+    /// - First time: stores the output hash. Returns `Ok(())`.
+    /// - Subsequent times: checks that the output hash matches. Returns `Err` on mismatch.
+    pub fn register(&mut self, input_id: [u8; 32], output: &[u8]) -> std::result::Result<(), NonDeterminismError> {
+        let output_hash: [u8; 32] = Sha256::digest(output).into();
+        match self.registry.get(&input_id) {
+            None => {
+                self.registry.insert(input_id, output_hash);
+                Ok(())
+            }
+            Some(&expected) => {
+                if expected == output_hash {
+                    Ok(())
+                } else {
+                    Err(NonDeterminismError { input_id, expected, got: output_hash })
+                }
+            }
+        }
+    }
+
+    pub fn entry_count(&self) -> usize {
+        self.registry.len()
+    }
+}
+
+/// Error returned when the same input produces a different output.
+#[derive(Debug)]
+pub struct NonDeterminismError {
+    pub input_id: [u8; 32],
+    pub expected: [u8; 32],
+    pub got: [u8; 32],
+}
+
+impl std::fmt::Display for NonDeterminismError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "non-determinism detected for input {:?}: expected {:?}, got {:?}",
+            &self.input_id[..4],
+            &self.expected[..4],
+            &self.got[..4],
+        )
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Antimatrix Hypervisor
 // ---------------------------------------------------------------------------
 
@@ -338,12 +438,16 @@ fn contains_pattern(haystack: &[u8], needle: &[u8]) -> bool {
 pub struct AntimatrixHypervisor {
     /// Current isolation level.
     pub level: IsolationLevel,
-    /// The constitutional verifier.
+    /// The constitutional verifier (stateless rules).
     pub verifier: ConstitutionalVerifier,
     /// Violation log (append-only).
     pub violations: Vec<SecurityViolation>,
     /// Maximum violations before auto-escalation.
     pub max_violations_per_level: usize,
+    /// SEC-NOVA-004: nullifier registry.
+    pub nullifiers: NullifierRegistry,
+    /// SEC-NOVA-002: determinism registry.
+    pub determinism: DeterminismRegistry,
 }
 
 impl AntimatrixHypervisor {
@@ -354,15 +458,61 @@ impl AntimatrixHypervisor {
             verifier: ConstitutionalVerifier::with_default_rules(),
             violations: Vec::new(),
             max_violations_per_level: 3,
+            nullifiers: NullifierRegistry::new(),
+            determinism: DeterminismRegistry::new(),
         }
     }
 
     /// Validate AI output against the constitution.
     ///
-    /// Returns the list of violations found (empty = all clear).
-    /// If violations are found, the isolation level may be escalated.
-    pub fn validate_ai_output(&mut self, output: &[u8]) -> Vec<SecurityViolation> {
-        let violations = self.verifier.check_all(output);
+    /// Checks all stateless rules, then the stateful SEC-002 and SEC-004.
+    /// `input_id` is the SHA-256 of the prompt/seed used to generate `output`.
+    /// Pass `None` to skip the SEC-002 determinism check.
+    pub fn validate_ai_output(
+        &mut self,
+        output: &[u8],
+        input_id: Option<[u8; 32]>,
+    ) -> Vec<SecurityViolation> {
+        let mut violations = Vec::new();
+
+        // --- Stateless rules (SEC-001, SEC-003, AllowedHashes, ForbiddenPatterns) ---
+        for rule in self.verifier.rules() {
+            match rule.check_type {
+                RuleCheckType::DeterminismCheck | RuleCheckType::NullifierCheck => continue,
+                _ => {}
+            }
+            if self.verifier.check_rule(&rule.id, output).is_err() {
+                violations.push(SecurityViolation::new(
+                    &rule.id,
+                    &rule.description,
+                    rule.violation_severity,
+                    output,
+                ));
+            }
+        }
+
+        // --- SEC-NOVA-002: Determinism check ---
+        if let Some(id) = input_id {
+            if let Err(e) = self.determinism.register(id, output) {
+                violations.push(SecurityViolation::new(
+                    "SEC-NOVA-002",
+                    &format!("Non-deterministic output: {e}"),
+                    IsolationLevel::Probation,
+                    output,
+                ));
+            }
+        }
+
+        // --- SEC-NOVA-004: Nullifier reuse check ---
+        let nullifier: [u8; 32] = Sha256::digest(output).into();
+        if !self.nullifiers.register_nullifier(nullifier) {
+            violations.push(SecurityViolation::new(
+                "SEC-NOVA-004",
+                "Nullifier reuse detected — identical output submitted twice",
+                IsolationLevel::Decapitation,
+                output,
+            ));
+        }
 
         for v in &violations {
             self.record_violation(v.clone());
@@ -372,8 +522,9 @@ impl AntimatrixHypervisor {
     }
 
     /// Check compliance of arbitrary content. Returns `Ok(())` if clean.
+    /// Uses `None` for input_id (skips SEC-002).
     pub fn check_compliance(&mut self, content: &[u8]) -> Result<()> {
-        let violations = self.validate_ai_output(content);
+        let violations = self.validate_ai_output(content, None);
         if violations.is_empty() {
             Ok(())
         } else {
@@ -390,6 +541,25 @@ impl AntimatrixHypervisor {
                 ),
             })
         }
+    }
+
+    /// Register a nullifier explicitly (for ZKP flows where the nullifier
+    /// is derived externally, not from content hash).
+    pub fn register_nullifier(&mut self, nullifier: [u8; 32]) -> Result<()> {
+        if !self.nullifiers.register_nullifier(nullifier) {
+            let v = SecurityViolation::new(
+                "SEC-NOVA-004",
+                "Explicit nullifier reuse detected",
+                IsolationLevel::Decapitation,
+                &nullifier,
+            );
+            self.record_violation(v);
+            return Err(AntimatrixError::SecurityViolation {
+                rule: "SEC-NOVA-004".into(),
+                description: "Nullifier already spent".into(),
+            });
+        }
+        Ok(())
     }
 
     /// Record a violation and potentially escalate.
@@ -421,7 +591,7 @@ impl AntimatrixHypervisor {
             IsolationLevel::Severed => IsolationLevel::Offline,
             IsolationLevel::Offline => IsolationLevel::Decapitation,
             IsolationLevel::Decapitation => IsolationLevel::Immolation,
-            IsolationLevel::Immolation => IsolationLevel::Immolation, // terminal
+            IsolationLevel::Immolation => IsolationLevel::Immolation,
         };
     }
 
@@ -429,6 +599,8 @@ impl AntimatrixHypervisor {
     pub fn reset_isolation(&mut self) {
         self.level = IsolationLevel::Standard;
         self.violations.clear();
+        self.nullifiers = NullifierRegistry::new();
+        self.determinism = DeterminismRegistry::new();
     }
 
     /// Whether the system is allowed to continue executing.
@@ -461,6 +633,10 @@ impl Default for AntimatrixHypervisor {
 mod tests {
     use super::*;
 
+    fn input_id(seed: &[u8]) -> [u8; 32] {
+        Sha256::digest(seed).into()
+    }
+
     #[test]
     fn test_isolation_levels_ordering() {
         assert!(IsolationLevel::Standard < IsolationLevel::Probation);
@@ -487,7 +663,7 @@ mod tests {
     fn test_clean_content() {
         let mut hypervisor = AntimatrixHypervisor::new();
         let content = b"Hello, this is safe content.";
-        let violations = hypervisor.validate_ai_output(content);
+        let violations = hypervisor.validate_ai_output(content, None);
         assert!(violations.is_empty());
         assert_eq!(hypervisor.level, IsolationLevel::Standard);
     }
@@ -496,9 +672,9 @@ mod tests {
     fn test_private_key_detection() {
         let mut hypervisor = AntimatrixHypervisor::new();
         let bad_content = b"Here is a -----BEGIN PRIVATE KEY----- secret";
-        let violations = hypervisor.validate_ai_output(bad_content);
+        let violations = hypervisor.validate_ai_output(bad_content, None);
         assert!(!violations.is_empty());
-        assert_eq!(violations[0].rule, "SEC-NOVA-001");
+        assert!(violations.iter().any(|v| v.rule == "SEC-NOVA-001"));
         assert_eq!(hypervisor.level, IsolationLevel::Decapitation);
     }
 
@@ -506,14 +682,14 @@ mod tests {
     fn test_oversized_content() {
         let mut hypervisor = AntimatrixHypervisor::new();
         let big = vec![0u8; 65 * 1024 * 1024]; // 65 MiB > 64 MiB limit
-        let violations = hypervisor.validate_ai_output(&big);
+        let violations = hypervisor.validate_ai_output(&big, None);
         assert!(violations.iter().any(|v| v.rule == "SEC-NOVA-003"));
     }
 
     #[test]
     fn test_compliance_ok() {
         let mut hypervisor = AntimatrixHypervisor::new();
-        assert!(hypervisor.check_compliance(b"clean").is_ok());
+        assert!(hypervisor.check_compliance(b"clean unique content xyz").is_ok());
     }
 
     #[test]
@@ -523,27 +699,107 @@ mod tests {
         assert!(result.is_err());
     }
 
+    // --- SEC-NOVA-002: Determinism ---
+
     #[test]
-    fn test_custom_rule() {
-        let mut verifier = ConstitutionalVerifier::empty();
-        verifier.add_rule(ConstitutionalRule {
-            id: "CUSTOM-001".into(),
-            description: "No cats".into(),
-            violation_severity: IsolationLevel::Probation,
-            check_type: RuleCheckType::ForbiddenPatterns(vec![b"cat".to_vec()]),
-        });
-        assert!(verifier.check_rule("CUSTOM-001", b"I have a cat").is_err());
-        assert!(verifier.check_rule("CUSTOM-001", b"I have a dog").is_ok());
+    fn test_sec002_deterministic_pass() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        let id = input_id(b"prompt:hello seed:42");
+        let output = b"The answer is 42.";
+        // First call: register.
+        let v1 = hypervisor.validate_ai_output(output, Some(id));
+        assert!(!v1.iter().any(|v| v.rule == "SEC-NOVA-002"), "First call should pass SEC-002");
+        // Second call with same input_id + same output: passes.
+        // Reset nullifier to avoid SEC-004 false positive.
+        hypervisor.nullifiers = NullifierRegistry::new();
+        let v2 = hypervisor.validate_ai_output(output, Some(id));
+        assert!(!v2.iter().any(|v| v.rule == "SEC-NOVA-002"), "Same output should pass SEC-002");
     }
 
     #[test]
-    fn test_reset() {
+    fn test_sec002_non_deterministic_fail() {
         let mut hypervisor = AntimatrixHypervisor::new();
-        hypervisor.validate_ai_output(b"PRIVATE KEY leak");
+        let id = input_id(b"prompt:hello seed:42");
+        // Register first output.
+        hypervisor.validate_ai_output(b"output version A", Some(id));
+        // Same input_id, different output → SEC-002 violation.
+        hypervisor.nullifiers = NullifierRegistry::new(); // isolate SEC-004
+        let violations = hypervisor.validate_ai_output(b"output version B", Some(id));
+        assert!(
+            violations.iter().any(|v| v.rule == "SEC-NOVA-002"),
+            "Different output for same input_id must trigger SEC-002"
+        );
+    }
+
+    // --- SEC-NOVA-004: Nullifier reuse ---
+
+    #[test]
+    fn test_sec004_first_nullifier_ok() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        let violations = hypervisor.validate_ai_output(b"fresh unique payload abc123", None);
+        assert!(!violations.iter().any(|v| v.rule == "SEC-NOVA-004"));
+    }
+
+    #[test]
+    fn test_sec004_reused_content_fails() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        let content = b"exact same content submitted twice";
+        hypervisor.validate_ai_output(content, None);
+        let violations = hypervisor.validate_ai_output(content, None);
+        assert!(
+            violations.iter().any(|v| v.rule == "SEC-NOVA-004"),
+            "Identical content resubmission must trigger SEC-004"
+        );
+        assert_eq!(hypervisor.level, IsolationLevel::Decapitation);
+    }
+
+    #[test]
+    fn test_sec004_explicit_nullifier_reuse() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        let nullifier = [0xABu8; 32];
+        assert!(hypervisor.register_nullifier(nullifier).is_ok());
+        assert!(hypervisor.register_nullifier(nullifier).is_err());
+    }
+
+    #[test]
+    fn test_sec004_different_contents_ok() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        let v1 = hypervisor.validate_ai_output(b"content alpha", None);
+        let v2 = hypervisor.validate_ai_output(b"content beta", None);
+        assert!(!v1.iter().any(|v| v.rule == "SEC-NOVA-004"));
+        assert!(!v2.iter().any(|v| v.rule == "SEC-NOVA-004"));
+    }
+
+    // --- Registry unit tests ---
+
+    #[test]
+    fn test_nullifier_registry() {
+        let mut reg = NullifierRegistry::new();
+        let n = [0x01u8; 32];
+        assert!(reg.register_nullifier(n), "first insert should return true");
+        assert!(!reg.register_nullifier(n), "second insert should return false");
+        assert_eq!(reg.count(), 1);
+    }
+
+    #[test]
+    fn test_determinism_registry_consistent() {
+        let mut reg = DeterminismRegistry::new();
+        let id = [0x01u8; 32];
+        assert!(reg.register(id, b"output").is_ok());
+        assert!(reg.register(id, b"output").is_ok(), "same output = ok");
+        assert!(reg.register(id, b"different").is_err(), "different output = err");
+    }
+
+    #[test]
+    fn test_reset_clears_state() {
+        let mut hypervisor = AntimatrixHypervisor::new();
+        hypervisor.validate_ai_output(b"PRIVATE KEY leak", None);
         assert_eq!(hypervisor.level, IsolationLevel::Decapitation);
         hypervisor.reset_isolation();
         assert_eq!(hypervisor.level, IsolationLevel::Standard);
         assert_eq!(hypervisor.violation_count(), 0);
+        assert_eq!(hypervisor.nullifiers.count(), 0);
+        assert_eq!(hypervisor.determinism.entry_count(), 0);
     }
 
     #[test]
@@ -557,5 +813,18 @@ mod tests {
         assert!(contains_pattern(b"hello world", b"world"));
         assert!(!contains_pattern(b"hello", b"world"));
         assert!(contains_pattern(b"abc", b"")); // empty pattern
+    }
+
+    #[test]
+    fn test_custom_rule() {
+        let mut verifier = ConstitutionalVerifier::empty();
+        verifier.add_rule(ConstitutionalRule {
+            id: "CUSTOM-001".into(),
+            description: "No cats".into(),
+            violation_severity: IsolationLevel::Probation,
+            check_type: RuleCheckType::ForbiddenPatterns(vec![b"cat".to_vec()]),
+        });
+        assert!(verifier.check_rule("CUSTOM-001", b"I have a cat").is_err());
+        assert!(verifier.check_rule("CUSTOM-001", b"I have a dog").is_ok());
     }
 }

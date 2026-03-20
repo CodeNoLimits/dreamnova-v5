@@ -19,12 +19,14 @@ Antimatrix is the security enforcement layer of the DreamNova stack. Every AI ou
 
 ## Constitutional rules (SEC-NOVA)
 
-| Rule | Description |
-|------|-------------|
-| **SEC-NOVA-001** | No private key may appear in any output (pattern scan) |
-| **SEC-NOVA-002** | All AI outputs must be deterministically reproducible (hash check) |
-| **SEC-NOVA-003** | Memory allocations must be bounded (no unbounded growth) |
-| **SEC-NOVA-004** | Nullifier reuse is forbidden (double-spend prevention) |
+| Rule | Description | Severity |
+|------|-------------|----------|
+| **SEC-NOVA-001** | No private key may appear in any output (PEM pattern scan) | Decapitation |
+| **SEC-NOVA-002** | All AI outputs must be deterministically reproducible (hash check) | Probation |
+| **SEC-NOVA-003** | Memory allocations must be bounded — 64 MiB max | Severed |
+| **SEC-NOVA-004** | Nullifier reuse is forbidden (double-spend prevention) | Decapitation |
+| **SEC-NOVA-005** | No shell injection patterns (backticks, `$(...)`, `\| bash`, `; rm`) | Decapitation |
+| **SEC-NOVA-006** | No API tokens / bearer credentials (`sk_live_`, `ghp_`, `AKIA`, JWT) | Decapitation |
 
 ## Quick start
 
@@ -81,6 +83,8 @@ AI output / code mutation
 │  Constitutional      │   SEC-NOVA-001: key leak scan
 │  Verifier            │   SEC-NOVA-002: determinism hash
 │  (stateless rules)   │   SEC-NOVA-003: allocation bounds
+│                      │   SEC-NOVA-005: shell injection scan
+│                      │   SEC-NOVA-006: API token scan
 └──────────┬──────────┘
            │ violation?
            ▼
@@ -102,6 +106,8 @@ AI output / code mutation
 | SEC-NOVA-002 (determinism) | ✅ Implemented |
 | SEC-NOVA-003 (memory bounds) | ✅ Implemented |
 | SEC-NOVA-004 (nullifier reuse) | ✅ Implemented |
+| SEC-NOVA-005 (shell injection) | ✅ Implemented |
+| SEC-NOVA-006 (API tokens) | ✅ Implemented |
 | Halo2 ZKP attestation | 🔜 Planned (ties to `tzimtzum`) |
 
 ## Research context

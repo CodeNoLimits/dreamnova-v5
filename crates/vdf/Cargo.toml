@@ -1,5 +1,6 @@
 [package]
 name = "vdf"
+readme = "README.md"
 description = "Verifiable Delay Function — repeated squaring with Wesolowski/Pietrzak proofs"
 edition.workspace = true
 version.workspace = true

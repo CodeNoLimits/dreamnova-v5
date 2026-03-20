@@ -1,5 +1,6 @@
 [package]
 name = "nfc-bridge"
+readme = "README.md"
 description = "DESFire EV3 NFC interface — APDU commands, PC/SC bridge, mutual authentication"
 edition.workspace = true
 version.workspace = true

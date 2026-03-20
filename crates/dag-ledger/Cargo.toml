@@ -1,5 +1,6 @@
 [package]
 name = "dag-ledger"
+readme = "README.md"
 description = "DAG-UTXO ledger — Proof-of-Shareholding consensus with VDF temporal barriers"
 edition.workspace = true
 version.workspace = true

@@ -1,5 +1,6 @@
 [package]
 name = "tzimtzum"
+readme = "README.md"
 description = "zk-SNARK circuit for NFC identity verification — Plonkish arithmetization"
 edition.workspace = true
 version.workspace = true

@@ -1,5 +1,6 @@
 [package]
 name = "antimatrix"
+readme = "README.md"
 description = "Formal verification hypervisor — CSDD validator with 6 isolation levels"
 edition.workspace = true
 version.workspace = true

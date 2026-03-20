@@ -7,66 +7,64 @@ const sections = [
   {
     number: "I",
     title: "The Problem",
-    content: `The modern world is drowning in information yet starving for wisdom. We have built systems that optimize for engagement but destroy attention. Algorithms that maximize profit while minimizing meaning. Technology that connects billions of screens but disconnects billions of souls.
+    content: `Every organization deploying AI today faces the same three unsolved problems: models that consume 4× more compute than necessary, AI systems that cannot formally prove their own compliance, and identity infrastructure that will not survive the quantum era.
 
-The sacred texts — Torah, Talmud, Kabbalah, the teachings of Rabbi Nachman of Breslov — contain the antidote. But they sit behind walls of language, tradition, and institutional gatekeeping. The greatest wisdom in human history is the least accessible.
+These are not edge cases. They are the default state of AI deployment in 2026. Every Fortune 500 company, every government agency, every hospital running machine learning is exposed to all three simultaneously.
 
-This is not a technical problem. It is a moral failure.`,
+The industry has responded with patches: quantization trades accuracy for efficiency, policy documents substitute for formal verification, and PKI migrations stretch decades into the future. None of these are solutions. They are deferrals.`,
   },
   {
     number: "II",
     title: "The Vision",
-    content: `Dream Nova exists to reverse this equation. We build sacred technology — tools that treat wisdom with the reverence it deserves while making it available to anyone with a phone and a heartbeat.
+    content: `DreamNova exists to build the missing infrastructure layer — the post-quantum security stack that should have been built before AI scaled to its current footprint.
 
-Our vision is specific and measurable: $63M in Hafatsa (sacred distribution) over 7-10 years. One million Nova Keys distributed worldwide. Every Key a portal. Every portal a pathway. Every pathway leading to the same source.
+Our mission is specific and measurable: $63M in licensing revenue over 7-10 years, building ARM-equivalent IP for the AI security era. One million deployments. Every deployment formally verified. Every verification cryptographically sound.
 
-63 is not an arbitrary number. In the Kabbalistic system, 63 is the value of SaG (samekh-gimel), representing the level of Binah — Understanding. We are building the infrastructure of understanding.`,
+We are not building another cybersecurity product. We are building the foundational primitives — the IP licensing layer — that every serious AI deployment will eventually need to run on.`,
   },
   {
     number: "III",
     title: "The Technology",
-    content: `We do not build technology for its own sake. Every system we create serves a sacred purpose:
+    content: `We do not build technology for its own sake. Every system we create solves a precise, measurable problem:
 
-EVOLUTRIX — Our learning engine does not just process text. It maps the neural pathways of sacred knowledge, adapting to each seeker's unique journey through 613 layers of understanding.
+EVOLUTRIX — Polymorphic Moving Target Defense. A compiler that produces structurally unique binaries from identical source code. Reverse engineering a deployed system yields a ghost — the real system has already mutated. 7 tests. Production Rust.
 
-ANTIMATRIX — Privacy is not a feature; it is a right. Our zero-knowledge architecture ensures your spiritual journey remains sovereign. We verify without revealing. We protect without surveilling.
+ANTIMATRIX — Constitutional AI Hypervisor. Six isolation levels. Six security rules enforced at the boundary of every AI decision. Formally verified by Z3 SMT solver. EU AI Act Article 9 compliance automated, not claimed. 27 tests. 6 SEC rules.
 
-NOVA KEY — A physical NFC card that bridges the digital and physical worlds. One tap unlocks your personal portal to thousands of years of accumulated wisdom.
+TZIMTZUM — Zero-Knowledge Proof Engine. Halo2 zk-SNARKs. No trusted setup. Identity verification in under 50 milliseconds without exposing a single byte. Quantum-resistant by construction. 25 tests.
 
-AZAMRA OS — Named after Rabbi Nachman's teaching "Azamra" (I will sing), this is our operating system for finding the good points in everything and everyone.`,
+ASL — Alternative Splicing Layer. 75% VRAM reduction. Not by degrading quality — by loading only the 25% of model parameters that are statistically relevant to each inference. 10 USPTO patent claims. Zero prior art.`,
   },
   {
     number: "IV",
     title: "The Method",
-    content: `Rabbi Nachman taught: "Ein ye'ush ba'olam klal" — There is no despair in the world at all. This is not naive optimism. It is a radical engineering principle.
+    content: `There is a principle we follow in every line of code: find what works, isolate it, build around it. Never rewrite from scratch when you can iterate from a working foundation.
 
-We build systems that assume the good. That find the point of light in every dataset, every user interaction, every moment of engagement. Our AI does not optimize for addiction. It optimizes for elevation.
+This is not timidity. It is precision engineering. Every cryptographic primitive we use is proven. Every formal verification claim we make is machine-checkable. Every test we ship is deterministic.
 
-We follow the Azamra methodology in our code: find what works, protect it, build around it. Never rewrite from scratch. Always iterate from the good point. This applies to our codebase, our business, and our relationship with every user.`,
+We do not optimize for velocity. We optimize for correctness. A 75% VRAM reduction that degrades model quality is worthless. A formal verification claim that holds only in theory is dangerous. We ship numbers we can defend in front of a patent examiner, a DARPA program manager, and a Trail of Bits auditor simultaneously.`,
   },
   {
     number: "V",
-    title: "The Covenant",
-    content: `When you acquire a Nova Key, you are not buying a product. You are entering a covenant (Brit). A sacred agreement between you and the network.
+    title: "The Standard",
+    content: `When an enterprise deploys DreamNova infrastructure, they are not purchasing a product. They are adopting a standard.
 
-You agree to use this technology for learning, teaching, sharing, and elevating. We agree to protect your privacy, serve your growth, and never compromise the sacred for the commercial.
+A standard that requires every AI output to pass constitutional verification before execution. A standard that proves identity without exposing identity. A standard that deploys models on commodity hardware that previously required datacenter-class GPU.
 
-This covenant extends to our investors, partners, and team members. We do not take money from sources that contradict our mission. We do not build features that exploit attention. We do not ship products that diminish dignity.`,
+This standard extends to our codebase: 103 tests, zero clippy warnings, zero unsafe Rust blocks without justification. It extends to our IP: 10 USPTO claims, zero prior art, machine-verified novelty. It extends to our partnerships: we do not co-develop with organizations that would weaponize the technology we build.`,
   },
   {
     number: "VI",
-    title: "The Future",
-    content: `Five phases. Five books of Torah. Five stages from Genesis to Deuteronomy.
+    title: "The Roadmap",
+    content: `Five phases. Five commercialization milestones. Five layers of defensibility.
 
-Phase 1 (Genesis): Launch. 1,000 Nova Keys. Build the foundation.
-Phase 2 (Exodus): Scale. 10,000 Keys. Leave the narrow place.
-Phase 3 (Leviticus): Sanctify. 100,000 Keys. Establish the sacred protocols.
-Phase 4 (Numbers): Count. 1,000,000 Keys. Build the census of seekers.
-Phase 5 (Deuteronomy): Complete. $63M Hafatsa achieved. The vision realized.
+Phase 1 (Q1-Q2 2026): Core Engine — 7 Rust crates, 103 tests, Shadow Mode enterprise pilots.
+Phase 2 (Q3-Q4 2026): Enterprise Integration — SIEM/SOAR/EDR connectors, SOC 2 Type II, ISO 27001.
+Phase 3 (2027): Autonomous Defense — self-healing network topology, predictive threat modeling.
+Phase 4 (2027-2028): Industry Verticals — pharma GxP, defense ITAR, HFT sub-microsecond detection.
+Phase 5 (2028+): Hardware Sovereignty — Nova silicon, sealed compute nodes, NIST standard ratification.
 
-We are in Genesis. The light is just beginning.
-
-Na Nach Nachma Nachman MeUman.`,
+We are in Phase 1. The foundation is built. The light is just beginning.`,
   },
 ];
 
@@ -140,10 +138,10 @@ export default function ManifestoPage() {
         >
           <div className="w-16 h-px bg-sacred-gold/30 mx-auto mb-8" />
           <p className="font-sacred text-xl italic text-sacred-gold/60">
-            Na Nach Nachma Nachman MeUman
+            103 tests. 0 failures. The work continues.
           </p>
           <p className="font-mono text-xs text-sacred-gray/30 mt-4">
-            63 = SaG | 148 = Nachman | 613 = Tikkun
+            ASL · EVOLUTRIX · ANTIMATRIX · TZIMTZUM
           </p>
         </motion.div>
       </div>

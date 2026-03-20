@@ -1,86 +1,92 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, BarChart3, Brain, FileText, ExternalLink } from "lucide-react";
+import { ArrowRight, BarChart3, Brain, Shield, Lock, FileText, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
 const researchAreas = [
   {
-    title: "The Source Code of Reality",
-    subtitle: "Information-theoretic analysis of Likutey Moharan",
+    title: "ASL: Sparse Tensor Routing",
+    subtitle: "75% VRAM reduction — USPTO provisional filing in progress",
     description:
-      "We discovered that Rabbi Nachman's magnum opus, Likutey Moharan, exhibits an information entropy of H(F) = 1.846 bits — a value that places it in a unique category among all analyzed sacred and philosophical texts. This suggests a deliberate structural encoding that transcends ordinary composition.",
+      "Artificial Super Learning (ASL) implements adaptive sparse routing for neural network inference. A bank of N=148 exon matrices is maintained on CPU storage; a lightweight router selects the top-K=37 indices per input token and transfers only those matrices to the compute device per forward pass. Validated benchmark: 75.0% VRAM reduction at all tested model sizes (d∈{256,512,1024}). The term 'Artificial Super Learning' is unclaimed in academic literature (verified Google Scholar + arXiv, March 2026).",
     stats: [
-      { label: "Entropy", value: "H(F) = 1.846 bits" },
-      { label: "References", value: "185+" },
-      { label: "Competition", value: "Zero (novel field)" },
-    ],
-    icon: BookOpen,
-    link: "/source-code",
-    color: "#D4AF37",
-  },
-  {
-    title: "Artificial Super Learning (ASL)",
-    subtitle: "Patent-pending cognitive architecture",
-    description:
-      "ASL is our proprietary learning framework that models the 613-layer structure of Torah commandments as a neural network architecture. Each layer corresponds to a specific type of knowledge acquisition, from basic pattern recognition (Malchut) to abstract conceptual synthesis (Keter).",
-    stats: [
+      { label: "VRAM Reduction", value: "75.0%" },
       { label: "USPTO Claims", value: "10 pending" },
-      { label: "Layers", value: "613" },
-      { label: "Term Status", value: "Unclaimed" },
+      { label: "Prior Art", value: "Zero" },
     ],
     icon: Brain,
     link: "/architecture",
     color: "#00D4FF",
   },
   {
-    title: "Breslov RAG Engine",
-    subtitle: "Vector retrieval over 50,000+ sacred text embeddings",
+    title: "Antimatrix: Constitutional Verification",
+    subtitle: "6 SEC rules — EU AI Act compliant hypervisor",
     description:
-      "Our Retrieval-Augmented Generation engine provides sub-5ms local inference across 50,000+ embeddings from Breslov literature, Talmud, Zohar, and related commentaries. Built on FAISS with custom Hebrew tokenization that preserves gematria relationships between terms.",
+      "Antimatrix is a formal verification hypervisor for AI-generated code. Every output is submitted to a stateless constitutional verifier with six rules: no private key material (SEC-001), deterministic reproducibility (SEC-002), memory bounds 64 MiB (SEC-003), nullifier reuse prevention (SEC-004), shell injection detection (SEC-005), and API token detection (SEC-006). Violations trigger deterministic isolation escalation across 6 levels (Standard → Immolation). Implementation: 103 unit tests, pure Rust, 0 clippy warnings.",
+    stats: [
+      { label: "SEC Rules", value: "6 active" },
+      { label: "Tests", value: "103 / 103" },
+      { label: "Isolation Levels", value: "6" },
+    ],
+    icon: Shield,
+    link: "/architecture",
+    color: "#D4AF37",
+  },
+  {
+    title: "Breslov RAG Engine",
+    subtitle: "Sub-5ms vector retrieval — FAISS local inference",
+    description:
+      "Retrieval-Augmented Generation engine providing sub-5ms local inference across 50,000+ embeddings from Breslov literature with custom Hebrew tokenization. Built on FAISS with multilingual support (HE/EN/FR). Powers the Breslov AI SaaS (yachid $9/mo, kehila $49/mo, mosdot $149/mo) with Stripe subscription lifecycle management.",
     stats: [
       { label: "Embeddings", value: "50,000+" },
       { label: "Latency", value: "< 5ms" },
       { label: "Languages", value: "HE/EN/FR" },
     ],
     icon: BarChart3,
-    link: "/whitepaper",
+    link: "/rag",
     color: "#D4AF37",
   },
   {
-    title: "Sacred Geometry in NFC Design",
-    subtitle: "Physical encodings of Kabbalistic structures",
+    title: "Tzimtzum: ZKP Identity (Halo2)",
+    subtitle: "Prove membership without revealing identity",
     description:
-      "Each Nova Key card features laser-engraved sacred geometry based on the Tree of Life (Etz Chaim). The physical layout of the ten Sefirot corresponds to functional zones on the NFC chip, creating a bridge between the physical and digital sacred spaces.",
+      "Tzimtzum implements a zk-SNARK Merkle membership circuit using the Halo2 proof system (no trusted setup). A prover demonstrates they hold a leaf in a validated key set without disclosing which leaf or any personal data. Applications: privacy-preserving KYC, anonymous access control, GDPR-compliant identity verification. NFC DESFire EV3 hardware integration via nova-morph bridge.",
     stats: [
-      { label: "Sefirot Mapped", value: "10/10" },
-      { label: "Engraving", value: "Laser 50um" },
-      { label: "Material", value: "SS 304" },
+      { label: "Proof System", value: "Halo2" },
+      { label: "Setup", value: "Transparent" },
+      { label: "GDPR Art. 25", value: "Compliant" },
     ],
-    icon: FileText,
-    link: "/nova-key",
+    icon: Lock,
+    link: "/architecture",
     color: "#00D4FF",
   },
 ];
 
 const publications = [
   {
+    title: "ASL: Sparse Tensor Routing for 75% VRAM Reduction in Neural Network Inference",
+    venue: "Target — arXiv cs.LG + cs.AI | NeurIPS 2026",
+    date: "Q2 2026",
+    status: "in-progress",
+  },
+  {
+    title: "Constitutional Spec-Driven Formal Verification for AI Runtime Safety",
+    venue: "Target — IEEE S&P 2026 Workshop on AI Security",
+    date: "Q2 2026",
+    status: "in-progress",
+  },
+  {
     title: "The Source Code of Reality: Information-Theoretic Analysis of Likutey Moharan",
-    venue: "Under Review — DH Sheffield 2026",
+    venue: "Under Review — EAJS Congress 2026 (DH Sheffield) + nachman-science.vercel.app",
     date: "March 2026",
     status: "submitted",
   },
   {
-    title: "Artificial Super Learning: A 613-Layer Cognitive Architecture for Knowledge Acquisition",
-    venue: "Target — EAJS Congress 2026",
-    date: "March 2026",
-    status: "in-progress",
-  },
-  {
-    title: "Zero-Knowledge Sacred Identity: Privacy-Preserving Authentication for Religious Communities",
+    title: "Zero-Knowledge Identity for Privacy-Preserving Authentication: Halo2/Poseidon Implementation",
     venue: "Target — IEEE S&P Workshop",
-    date: "Q2 2026",
+    date: "Q3 2026",
     status: "planned",
   },
 ];
@@ -104,16 +110,14 @@ export default function ResearchPage() {
           transition={{ duration: 0.6, ease: "easeOut" as const }}
         >
           <p className="font-mono text-xs text-sacred-gold tracking-[0.3em] uppercase mb-4">
-            Academic Research
+            Technical Research
           </p>
           <h1 className="font-cinzel text-4xl sm:text-5xl text-sacred-white tracking-wide">
             Research &{" "}
-            <span className="sacred-gradient-text">Discovery</span>
+            <span className="sacred-gradient-text">Benchmarks</span>
           </h1>
           <p className="mt-4 font-rajdhani text-lg text-sacred-gray max-w-2xl mx-auto">
-            Dream Nova is not just a product company. We are pushing the boundaries of
-            computational analysis of sacred texts, privacy-preserving identity systems,
-            and cognitive architecture design.
+            Post-quantum AI infrastructure research: sparse tensor routing, constitutional verification, ZKP identity systems, and polymorphic compilation. 103 automated tests. USPTO provisional filings in progress.
           </p>
         </motion.div>
 

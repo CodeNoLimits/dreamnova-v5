@@ -40,8 +40,8 @@ export default function ArchitecturePage() {
             <span className="sacred-gradient-text">Architecture</span>
           </h1>
           <p className="font-rajdhani text-lg text-sacred-gray max-w-2xl mx-auto">
-            A comprehensive overview of Dream Nova&apos;s four-pillar architecture,
-            technology stack, and the five-phase master plan for $63M Hafatsa.
+            A comprehensive overview of DreamNova&apos;s post-quantum AI infrastructure:
+            five modules, 103 tests, six SEC rules, and the five-phase commercialization roadmap.
           </p>
         </motion.div>
 

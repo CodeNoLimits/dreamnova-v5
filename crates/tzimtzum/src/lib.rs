@@ -33,6 +33,8 @@ use std::fmt;
 pub mod identity;
 pub use identity::{IdentityRegistry, MerkleTree};
 
+pub mod vdf_nonce;
+
 // ---------------------------------------------------------------------------
 // Error types
 // ---------------------------------------------------------------------------

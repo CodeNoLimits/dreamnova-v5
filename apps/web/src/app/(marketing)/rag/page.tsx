@@ -1,15 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpen, MessageCircle, Mic, Zap, Globe, Users, Building2,
-  Check, ArrowRight, Star, Lock,
+  Check, ArrowRight, Star, Lock, Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
 const plans = [
   {
+    key: "yachid",
     name: "Yachid",
     subtitle: "Individual",
     price: "$9",
@@ -20,23 +22,25 @@ const plans = [
     highlight: false,
   },
   {
+    key: "kehila",
     name: "Kehila",
     subtitle: "Community",
     price: "$49",
     period: "/month",
     questions: "Unlimited questions",
     features: ["Everything in Yachid", "Up to 50 members", "Custom Shul branding", "Priority support", "Usage analytics"],
-    cta: "Contact us",
+    cta: "Start free trial",
     highlight: true,
   },
   {
+    key: "mosdot",
     name: "Mosdot",
     subtitle: "Institution",
     price: "$149",
     period: "/month",
     questions: "Unlimited + API access",
     features: ["Everything in Kehila", "Unlimited members", "White-label option", "Dedicated account manager", "Custom corpus upload"],
-    cta: "Contact us",
+    cta: "Start free trial",
     highlight: false,
   },
 ];
@@ -90,6 +94,32 @@ const demoQuestions = [
 ];
 
 export default function BreslovRAGPage() {
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [emailInput, setEmailInput] = useState("");
+
+  async function handleCheckout(planKey: string) {
+    const email = emailInput || prompt("Your email address:");
+    if (!email) return;
+    setCheckoutLoading(planKey);
+    try {
+      const res = await fetch("/api/stripe/rag-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey.toLowerCase(), email }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Checkout unavailable. Email: dreamnovaultimate@gmail.com");
+      }
+    } catch {
+      alert("Checkout unavailable. Email: dreamnovaultimate@gmail.com");
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
       {/* Hero */}
@@ -239,13 +269,17 @@ export default function BreslovRAGPage() {
                   ))}
                 </ul>
                 <Button
+                  onClick={() => handleCheckout(plan.key)}
+                  disabled={checkoutLoading === plan.key}
                   className={`w-full ${
                     plan.highlight
                       ? "bg-amber-500 hover:bg-amber-400 text-black font-bold"
                       : "border border-white/20 hover:border-amber-400/50 bg-transparent"
                   }`}
                 >
-                  {plan.cta}
+                  {checkoutLoading === plan.key ? (
+                    <><Loader2 size={14} className="animate-spin" /> Processing…</>
+                  ) : plan.cta}
                 </Button>
               </motion.div>
             ))}

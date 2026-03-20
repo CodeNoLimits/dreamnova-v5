@@ -33,6 +33,8 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 
+pub use vdf::{VdfChallenge, VdfProof};
+
 pub mod network;
 pub use network::{
     CheckpointRecord, GossipMessage, PoShVote, PeerAddr, PeerId,
@@ -216,13 +218,46 @@ impl PoShValidator {
         );
     }
 
-    /// Mark a validator as having submitted a VDF proof.
+    /// Mark a validator as having submitted a VDF proof (simulation — no cryptographic check).
+    ///
+    /// Use [`submit_vdf_proof_verified`] in production to enforce the Wesolowski proof.
     pub fn submit_vdf_proof(&mut self, validator_id: &TxHash) -> Result<()> {
         let v = self
             .validators
             .get_mut(validator_id)
             .ok_or_else(|| LedgerError::UnknownValidator(hex_encode(validator_id)))?;
         v.vdf_submitted = true;
+        Ok(())
+    }
+
+    /// Submit and cryptographically verify a Wesolowski VDF proof.
+    ///
+    /// The `challenge` encodes the epoch seed + time parameter `T`.
+    /// The `proof` must satisfy `pi^l * x^r == y (mod N)` per the Wesolowski
+    /// construction.  Only on valid proof is `vdf_submitted` set to `true`.
+    ///
+    /// This is the production path; tests may use [`submit_vdf_proof`].
+    pub fn submit_vdf_proof_verified(
+        &mut self,
+        validator_id: &TxHash,
+        challenge: &VdfChallenge,
+        proof: &VdfProof,
+    ) -> Result<()> {
+        // Validate the validator exists first.
+        if !self.validators.contains_key(validator_id) {
+            return Err(LedgerError::UnknownValidator(hex_encode(validator_id)));
+        }
+
+        // Cryptographic VDF verification (Wesolowski).
+        vdf::verify(challenge, proof).map_err(|_e| {
+            LedgerError::InvalidHash // reuse generic error; VDF error detail in logs
+        })?;
+
+        self.validators
+            .get_mut(validator_id)
+            .unwrap()
+            .vdf_submitted = true;
+
         Ok(())
     }
 
@@ -812,5 +847,71 @@ mod tests {
         let w2 = posh.weight(&v2);
         assert!((w1 - 0.9).abs() < 0.001);
         assert!((w2 - 0.1).abs() < 0.001);
+    }
+
+    // --- VDF verified submission tests ---
+
+    fn test_vdf_modulus() -> num_bigint::BigUint {
+        // Small RSA-style modulus for tests (not cryptographically secure).
+        // N = 17 * 19 = 323.
+        num_bigint::BigUint::from(323u32)
+    }
+
+    #[test]
+    fn test_submit_vdf_proof_verified_accepts_valid_proof() {
+        use vdf::{evaluate, prove, VdfChallenge};
+
+        let modulus = test_vdf_modulus();
+        let challenge = VdfChallenge::from_bytes(b"epoch-0-seed", 10, &modulus).unwrap();
+        let y = evaluate(&challenge).unwrap();
+        let proof = prove(&challenge, &y).unwrap();
+
+        let mut posh = PoShValidator::new();
+        let v1 = test_address("vdf-validator");
+        posh.register(v1, 100);
+
+        posh.submit_vdf_proof_verified(&v1, &challenge, &proof).unwrap();
+        assert!(posh.can_advance_epoch()); // 100% stake = epoch can advance
+    }
+
+    #[test]
+    fn test_submit_vdf_proof_verified_rejects_bad_proof() {
+        use num_bigint::BigUint;
+        use vdf::{VdfChallenge, VdfProof};
+
+        let modulus = test_vdf_modulus();
+        let challenge = VdfChallenge::from_bytes(b"epoch-0-seed", 10, &modulus).unwrap();
+
+        // Fabricate a clearly wrong proof.
+        let bad_proof = VdfProof {
+            y: BigUint::from(99u32),
+            pi: BigUint::from(1u32),
+            l: BigUint::from(3u32),
+        };
+
+        let mut posh = PoShValidator::new();
+        let v1 = test_address("vdf-validator-bad");
+        posh.register(v1, 100);
+
+        let result = posh.submit_vdf_proof_verified(&v1, &challenge, &bad_proof);
+        assert!(result.is_err(), "bad VDF proof must be rejected");
+        assert!(!posh.can_advance_epoch()); // flag not set
+    }
+
+    #[test]
+    fn test_submit_vdf_proof_verified_unknown_validator() {
+        use vdf::{evaluate, prove, VdfChallenge};
+
+        let modulus = test_vdf_modulus();
+        let challenge = VdfChallenge::from_bytes(b"seed", 5, &modulus).unwrap();
+        let y = evaluate(&challenge).unwrap();
+        let proof = prove(&challenge, &y).unwrap();
+
+        let mut posh = PoShValidator::new();
+        // Do NOT register the validator.
+        let ghost = test_address("ghost");
+
+        let result = posh.submit_vdf_proof_verified(&ghost, &challenge, &proof);
+        assert!(result.is_err());
     }
 }

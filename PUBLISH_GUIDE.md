@@ -18,24 +18,30 @@ cargo test --workspace   # doit afficher 94 passed, 0 failed
 
 ## Publication dans l'ordre (dépendances d'abord)
 
+**IMPORTANT** : tzimtzum et dag-ledger dépendent de `vdf`. Il FAUT publier `vdf` en premier
+et attendre ~60 secondes que crates.io l'indexe avant de publier les dépendants.
+
 ```bash
 cd ~/Desktop/dreamnova-v5
 
-# 1. Crates sans dépendances internes
+# ÉTAPE 1 — Crates indépendants (dry-run PASS confirmé)
 cargo publish -p nova-morph
 cargo publish -p antimatrix
 cargo publish -p evolutrix
-cargo publish -p vdf          # ← dag-ledger et tzimtzum en dépendent
-
-# 2. Crates qui dépendent de vdf (attendre ~30s que vdf soit indexé)
-sleep 30
 cargo publish -p nfc-bridge
-cargo publish -p tzimtzum     # dépend de vdf
-cargo publish -p dag-ledger   # dépend de vdf
+cargo publish -p vdf          # ← DOIT être publié avant tzimtzum et dag-ledger
+
+# Attendre que crates.io indexe vdf (~60 secondes)
+echo "Attente indexation vdf sur crates.io..."
+sleep 60
+
+# ÉTAPE 2 — Crates qui dépendent de vdf
+cargo publish -p tzimtzum     # dépend de vdf 0.1.0
+cargo publish -p dag-ledger   # dépend de vdf 0.1.0
 ```
 
-> **Note**: crates.io a un délai d'indexation de ~30 secondes entre les publications.
-> Si tzimtzum ou dag-ledger échouent avec "package not found", attendre 1 minute et réessayer.
+> **Si tzimtzum ou dag-ledger échouent** avec "could not find VdfChallenge in vdf",
+> c'est que crates.io n'a pas encore indexé vdf. Attendre 2 minutes et réessayer.
 
 ## Après publication
 

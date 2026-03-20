@@ -33,6 +33,12 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 
+pub mod network;
+pub use network::{
+    CheckpointRecord, GossipMessage, PoShVote, PeerAddr, PeerId,
+    decode_json, encode_json,
+};
+
 // ---------------------------------------------------------------------------
 // Error types
 // ---------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 # DreamNova V5 — Guide de publication crates.io
 
 **Préparé par Emunah-102 — 2026-03-20**
-**Status**: 7/7 crates dry-run PASS ✅ — prêt à exécuter
+**Status**: 5/5 crates indépendants dry-run RE-CONFIRMÉS ✅ (cycle 60, 103 tests) — prêt à exécuter
+**Crates vérifiés**: antimatrix ✅ | vdf ✅ | evolutrix ✅ | nova-morph ✅ | nfc-bridge ✅
+**Note**: tzimtzum + dag-ledger = dépendent de vdf sur crates.io (pas de dry-run local possible avant publication vdf)
 
 ---
 

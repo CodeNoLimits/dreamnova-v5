@@ -405,7 +405,7 @@ export function Features() {
                             {engine.name === "Evolutrix"
                               ? "2,400+"
                               : engine.name === "Antimatrix"
-                                ? "1,800+"
+                                ? "1,900+"
                                 : "1,600+"}
                           </span>
                           <span className="block font-rajdhani text-xs text-[#8888AA]/50 mt-1">
@@ -424,10 +424,10 @@ export function Features() {
                             style={{ color: engine.color }}
                           >
                             {engine.name === "Evolutrix"
-                              ? "18"
+                              ? "7"
                               : engine.name === "Antimatrix"
-                                ? "12"
-                                : "14"}
+                                ? "27"
+                                : "25"}
                           </span>
                           <span className="block font-rajdhani text-xs text-[#8888AA]/50 mt-1">
                             Verified Tests

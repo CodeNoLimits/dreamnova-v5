@@ -303,7 +303,7 @@ export const TERMINAL_LINES = [
   { text: "[TZIMTZUM] \u2713 Proof verified in 4.7ms", color: "green" },
   { text: "", color: "dim" },
   { text: "[ANTIMATRIX] Hypervisor isolation: LEVEL_4_QUARANTINE", color: "yellow" },
-  { text: "[ANTIMATRIX] \u2713 Constitutional layers: 4/4 verified", color: "green" },
+  { text: "[ANTIMATRIX] \u2713 Constitutional layers: 6/6 verified", color: "green" },
   { text: "", color: "dim" },
   { text: "[ESTHER] Entropy baseline: H(F) = 1.846 bits", color: "cyan" },
   { text: "[ESTHER] \u2713 GNN anomaly score: 0.023 (nominal)", color: "green" },

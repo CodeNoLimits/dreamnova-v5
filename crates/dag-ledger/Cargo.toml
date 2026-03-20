@@ -2,6 +2,8 @@
 name = "dag-ledger"
 readme = "README.md"
 description = "DAG-UTXO ledger — Proof-of-Shareholding consensus with VDF temporal barriers"
+keywords = ["dag", "ledger", "consensus", "utxo", "blockchain"]
+categories = ["cryptography", "data-structures", "network-programming"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true

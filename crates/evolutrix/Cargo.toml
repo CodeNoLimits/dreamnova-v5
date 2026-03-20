@@ -1,6 +1,9 @@
 [package]
 name = "evolutrix"
+readme = "README.md"
 description = "Polymorphic compiler core — AST mutation, DSLR, ISR, and Moving Target Defense"
+keywords = ["compiler", "obfuscation", "security", "polymorphic", "ast"]
+categories = ["compilers", "cryptography"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true

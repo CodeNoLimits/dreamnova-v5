@@ -2,6 +2,8 @@
 name = "vdf"
 readme = "README.md"
 description = "Verifiable Delay Function — repeated squaring with Wesolowski/Pietrzak proofs"
+keywords = ["vdf", "cryptography", "consensus", "blockchain", "wesolowski"]
+categories = ["cryptography", "algorithms"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true

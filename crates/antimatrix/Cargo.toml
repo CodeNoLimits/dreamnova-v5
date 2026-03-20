@@ -2,6 +2,8 @@
 name = "antimatrix"
 readme = "README.md"
 description = "Formal verification hypervisor — CSDD validator with 6 isolation levels"
+keywords = ["security", "formal-verification", "hypervisor", "ai-safety", "auditing"]
+categories = ["development-tools", "security"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true

@@ -2,6 +2,8 @@
 name = "nfc-bridge"
 readme = "README.md"
 description = "DESFire EV3 NFC interface — APDU commands, PC/SC bridge, mutual authentication"
+keywords = ["nfc", "desfire", "smartcard", "apdu", "authentication"]
+categories = ["hardware-support", "cryptography", "authentication"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true

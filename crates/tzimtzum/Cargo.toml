@@ -2,6 +2,8 @@
 name = "tzimtzum"
 readme = "README.md"
 description = "zk-SNARK circuit for NFC identity verification — Plonkish arithmetization"
+keywords = ["zkp", "zero-knowledge", "nfc", "identity", "halo2"]
+categories = ["cryptography", "authentication"]
 edition.workspace = true
 version.workspace = true
 license.workspace = true
